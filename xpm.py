@@ -121,7 +121,7 @@ class Main:
                 name: str = input("Enter the name: ")
                 data: bytes = FileReader(self.PASSWORD_PATH).read()
                 GetPassword(name= name, data= data).get_password() # if name not in database -> NotFoundError
-                if input("Are you sure fo delete [yes/No]: ").lower()[0] != 'y':
+                if input("Are you sure you want to delete [yes/No]: ").lower()[0] != 'y':
                     print( f'{Color.GREEN}Password Not Deleted...{Color.ORG}' )
                     self.exit_handler(None, None)
                 modfiy = ModifyPassword( name= name, data= data )
@@ -323,7 +323,7 @@ class Main:
 
         if not decrypt and not isdatabaseenctypted:
             if not self.__key:
-                user_input: str = input('Did you woant to encrypt the database [yes/No]: ')
+                user_input: str = input('Did you want to encrypt the database [yes/No]: ')
                 if user_input.lower()[0] == 'y':
                     user_input = input('Did you have a key [yes/No]: ')
                     if user_input.lower()[0] == 'y':
@@ -404,12 +404,6 @@ if __name__=="__main__":
         help="Set show as natural.",
         action='store_true'
     )
-    password_management.add_argument(
-        '-edb',
-        '--encrypt-database',
-        help="Encrypt the database.",
-        action='store_true'
-    )
 
     # File Management...
     file_management = parser.add_argument_group(
@@ -486,12 +480,6 @@ if __name__=="__main__":
         '-pr',
         '--password-recovery',
         help="Recovery password management backup.",
-        action="store_true"
-    )
-    backup_management.add_argument(
-        '-lr',
-        '--local-recovery',
-        help="Recovery local backup.",
         action="store_true"
     )
     backup_management.add_argument(
