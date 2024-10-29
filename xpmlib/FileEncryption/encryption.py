@@ -2,7 +2,7 @@
 from cryptography.fernet import Fernet
 from os                  import remove
 
-from ..Display           import DisplaySetting, DisplayRemoving, DisplayKey, DisplayEnOrDe
+from ..Display           import DisplaySetting, DisplayRemoving, DisplayEnOrDe
 from ..File.Read         import FileReader
 from ..File.Write        import WriteFile
 from ..ctype.TypeChecker import Check
@@ -22,7 +22,7 @@ class Encrytion:
         self.__key = key if key else Fernet.generate_key()
         self.__remove_files = remove_files
 
-    def encrypt( self ) -> None:
+    def encrypt( self ) -> bytes:
         """Encrypt files."""
         for path in self.paths:
             print('---------- Encryption ----------')
@@ -46,6 +46,4 @@ class Encrytion:
                 remove(path)
                 DisplayRemoving.log(path)
     
-        # print the key
-        DisplayKey.log(self.__key.decode())
-        return
+        return self.__key

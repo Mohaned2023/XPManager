@@ -199,9 +199,12 @@ The constructor validates the `paths` parameter to ensure it is a list, initiali
 encryptor = Encrytion(paths=["/path/to/file1", "/path/to/file2"], key=b'your_encryption_key', remove_files=True)
 ```
 
-## Method: `encrypt(self) -> None`
+## Method: `encrypt(self) -> bytes`
 
 This method encrypts the files listed in the `paths` parameter.
+
+### Returns:
+- `bytes`: The encryption key.
 
 ### Process:
 1. For each file in `paths`, it appends an '.x' to the filename to indicate that the file is encrypted.
@@ -214,16 +217,8 @@ This method encrypts the files listed in the `paths` parameter.
 8. The encryption key is displayed using `DisplayKey`.
 
 ```python
-encryptor.encrypt()
-```
-
-### Encryption Key
-
-After encryption, the encryption key is printed. Ensure you store this key securely, as it is necessary to decrypt the files later.
-
-```python
-# Displaying the encryption key
-print(f"Encryption Key: {encryptor._Encrytion__key.decode()}")
+key = encryptor.encrypt().decode()
+print(f"{key = }")
 ```
 
 ### Usage Example
