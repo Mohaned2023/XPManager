@@ -5,5 +5,6 @@ from .Tar                import Tar, TarExtract
 from .Upload             import MegaUploader
 from .ctype              import TypeChecker
 from .Color              import Color
+from .Key                import Key
 from .Display            import *
 from .Error              import *
