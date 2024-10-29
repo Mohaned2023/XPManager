@@ -1,80 +1,98 @@
 # XPManager:
+Many times I have very sensitive information and I do not want to upload it\
+to large companies or use their protection methods, so I had the idea of ​\
+​programming this modest tool to secure my files and also to manage my \
+passwords in a strong way in terms of creation, security, etc.
 
-A tool that uses three features.
+In addition, I found that I was learning the principle of OOP using Python.\
+At the end of the course, I was asked to do a final project for the course,\
+so I found that this was the perfect opportunity to realize this idea,\
+knowing that the code lacks many principles. I had a tight time to deliver\
+the project. I did not make the code 100% clean and apply all the concepts\
+of OOP, but I learned a lot of things.
 
-1. Password Management tool.
-2. File and Folder Encryption Management tool.
-3. Backup and Recovery Management tool.
-
-# Indexes:
-
-- [Main](./README.md):
-    - [Main](./xpm.py).
-
-- [PasswordManagement](./xpmlib/PasswordManagement/DOC.md):
-    - [GeneratePassword](./xpmlib/PasswordManagement/generate.py).
-    - [GetPassword](./xpmlib/PasswordManagement/get.py).
-    - [ModifyPassword](./xpmlib/PasswordManagement/modify.py).
-    - [SavePassword](./xpmlib/PasswordManagement/save.py).
-
-- [FileEncryption](./xpmlib/FileEncryption/DOC.md):
-    - [CheckFile](./xpmlib/FileEncryption/check.py).
-    - [Decryption](./xpmlib/FileEncryption/decryption.py).
-    - [Encrytion](./xpmlib/FileEncryption/encryption.py).
-
-- [Upload](./xpmlib/Upload/DOC.md):
-    - [MegaUploader](./xpmlib/Upload/mega.py).
-
-- [Tar](./xpmlib/Tar/DOC.md):
-    - [Tar](./xpmlib/Tar/tar.py).
-    - [TarExtract](./xpmlib/Tar/extract.py).
-
-- [File](./xpmlib/File/DOC.md):
-    - [FileReader](./xpmlib/File/Read.py).
-    - [WriteFile](./xpmlib/File/Write.py).
-    - [GetPath](./xpmlib/File/Paths.py).
-
-- [Error](./xpmlib/Error/DOC.md):
-    - [Error](./xpmlib/Error/__init__.py).
-    - [NotFoundError](./xpmlib/Error/__init__.py).
-    - [LengthError](./xpmlib/Error/__init__.py).
-    - [ParameterError](./xpmlib/Error/__init__.py).
-    - [FoundError](./xpmlib/Error/__init__.py).
-    - [ArgumentNotFoundError](./xpmlib/Error/__init__.py).
-    - [EmptyDataError](./xpmlib/Error/__init__.py).
-    - [FileSizeError](./xpmlib/Error/__init__.py).
-
-- [Display](./xpmlib/Display/DOC.md):
-    - [Display](./xpmlib/Display/display.py).
-    - [DisplayEnOrDe](./xpmlib/Display/enorde.py).
-    - [DisplayError](./xpmlib/Display/error.py).
-    - [DisplayKey](./xpmlib/Display/key.py).
-    - [DisplayPassword](./xpmlib/Display/password.py).
-    - [DisplayRemoving](./xpmlib/Display/removing.py).
-    - [DisplaySaved](./xpmlib/Display/saved.py).
-    - [DisplaySetting](./xpmlib/Display/setting.py).
-
-- [ctype](./xpmlib/ctype/DOC.md):
-    - [Check](./xpmlib/ctype/TypeChecker.py).
-
-- [Color](./xpmlib/Color/DOC.md):
-    - [Color](./xpmlib/Color/__init__.py).
-
-# Information:
-Number of classes: `32` class..
-
-Time taken to complete: `10` hours..
-
-> Made with full love by `Mohaned Sherhan Mr.x`
-
-# Set Up:
+# Installation:
 ```Bash
-git clone https://github.com/Mohaned2023/XPManager.git
-cd XPManager
-pip install -r requirements.txt
-pip install --upgrade tenacity 
-python xpm.py
+$ git clone https://github.com/Mohaned2023/XPManager.git
+$ cd XPManager
+$ pip install -r requirements.txt
+$ pip install --upgrade tenacity 
+$ python xpm.py
 ```
+
+# Usage:
+The tool is built on three sub-tools, which are:
+1. Password Management.
+2. File Management.
+3. Backup Management.
+
+Here is an explanation of how to use each one:
+### Password Management:
+to use this tool set `-pm` or `--password-management`\
+followed by: 
+- `-l [number]` or `--length [number]` for creating a password with length.\
+example:
+```bash
+$ python xpm.py -pm -l 32
+```
+- `-s` or `--save` for saving the password in the json file.\
+You will be asked if you want to encryot the json file.\
+If you entered `yse` or `y` the tool will encrypt the file using\
+the `Fernet` algorithm in `cryptography`.\
+example:
+```bash
+$ python xpm.py -pm -l 32 -s
+```
+- `-up` or `--update-password` for update the password in the database.
+- `-d` or `--delete-password` for deleting a password.
+- `-fp` or `--find-password` for finding a password from the database.
+- `-sh` or `--show` followed by: 
+    - `-t` or `--table` for dispaly the passwors as table.
+    - `-n` or `--natural` for dispaly the passwors as list.
+
+### File Management:
+to use this tool set `-fm` or `--file-management`\
+followed by: 
+- `-ef` or `--encrypt-file` for encrypt a file.
+- `-df` or `--decrypt-file` for decrypt a file.
+- `-efs` or `--encrypt-folder` for encrypt files in folder.
+- `-dfs` or `--decrypt-folder` for decrypt files in folder.
+
+### Backup Management:
+to use this tool set `-bm` or `--backup-management`\
+followed by: 
+- `-pdb` or `--password-database` to backup the password database, followed by:
+    - `-lb` or `--local-backup` for local backup.
+    - `-mb` or `--mega-backup` upload the backup to [mega.nz](https://mega.nz).
+- `-fb` or `--folder-backup` to backup a folder, followed by:
+    - `-lb` or `--local-backup` for local backup.
+    - `-mb` or `--mega-backup` upload the backup to [mega.nz](https://mega.nz).
+
+example:
+```bash
+# Folder with local backup:
+$ python xpm.py -bm -fb -lb
+# Folder with mega.nz backup:
+$ python xpm.py -bm -fb -mb
+# Password database with loacl backup:
+$ python xpm.py -bm -pdb -lb
+# Password database with mega.nz backup:
+$ python xpm.py -bm -pdb -mb
+```
+
+# Classes Docs:
+- [PasswordManagement](./xpmlib/PasswordManagement/DOC.md)
+- [FileEncryption](./xpmlib/FileEncryption/DOC.md)
+- [Upload](./xpmlib/Upload/DOC.md)
+- [Tar](./xpmlib/Tar/DOC.md)
+- [File](./xpmlib/File/DOC.md)
+- [Error](./xpmlib/Error/DOC.md)
+- [Display](./xpmlib/Display/DOC.md)
+- [ctype](./xpmlib/ctype/DOC.md)
+- [Color](./xpmlib/Color/DOC.md)
+- [Key](./xpmlib/Key/DOC.md)
+
+
 # Refernces:
 - [cryptography - Fernet _cryptography.io_](https://cryptography.io/en/latest/fernet/)
 - [string _docs.python.org_](https://docs.python.org/3/library/string.html)
@@ -82,3 +100,5 @@ python xpm.py
 - [mega _pypi.org_](https://pypi.org/project/mega.py/)
 - [tarfile _docs.python.org_](https://docs.python.org/3/library/tarfile.html)
 - [rich - table - console _rich.readthedocs.io_](https://rich.readthedocs.io/en/stable/introduction.html)
+--- 
+> Made with full love by `Mohaned Sherhan Mr.x`
