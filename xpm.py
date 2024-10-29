@@ -4,15 +4,17 @@ import signal
 from os.path     import isfile, join, dirname
 from argparse    import ArgumentParser
 from mega.errors import RequestError
+from random      import randint
 from os          import remove
 
 from xpmlib.PasswordManagement import GetPassword, ModifyPassword, GeneratePassword, SavePassword
-from xpmlib.Display            import DisplayPassword, DisplayError, DisplaySaved
+from xpmlib.Display            import DisplayPassword, DisplayError, DisplaySaved, DisplayKey
 from xpmlib.FileEncryption     import CheckFile, Encrytion, Decryption
 from xpmlib.File               import GetPath, FileReader, WriteFile
 from xpmlib.Tar                import Tar, TarExtract
 from xpmlib.Upload             import MegaUploader
 from xpmlib.Color              import Color
+from xpmlib.Key                import Key
 from xpmlib.Error              import *
 
 class Main:
@@ -26,6 +28,7 @@ class Main:
         signal.signal(signal.SIGINT, self.exit_handler)
         self.__args = args
         self.__key = None
+        self.__constant_number = None
     # The Runner..
     def run( self ) -> None:
         # Password Management:
@@ -151,19 +154,22 @@ class Main:
                 # Encrypt file
                 if self.__args.encrypt_file:
                     if input('Did you have a key [yes/No]: ').lower()[0] == 'y':
-                        self.__key = input("Enter the key: ").encode()
-                    Encrytion(
+                        self.set_key()
+                    self.__key = Encrytion(
                         paths=[file_path],
                         key= self.__key,
                         remove_files= remove_file
                     ).encrypt()
+                    self.get_key()
                 # Decrypt file
                 else:
+                    self.set_key()
                     Decryption(
                         paths= [file_path],
-                        key= input('Enter the key: ').encode(),
+                        key= self.__key,
                         remove_files= remove_file
                     ).decrypt()
+                    self.get_key()
             except Exception as error:
                 DisplayError.log(error)
         # Folder
@@ -175,25 +181,27 @@ class Main:
                 if self.__args.encrypt_folder:
                     key: str = None
                     if input('Did you have a key [yes/No]: ').lower()[0] == 'y':
-                        self.__key = input("Enter the key: ").encode()
-                    Encrytion(
+                        self.set_key()
+                    self.__key = Encrytion(
                         paths= paths,
                         key= self.__key,
                         remove_files= remove_files
                     ).encrypt()
+                    self.get_key()
                 elif self.__args.decrypt_folder:
+                    self.set_key()
                     Decryption(
                         paths= paths,
-                        key= input('Enter the key: ').encode(),
+                        key= self.__key,
                         remove_files= remove_files
                     ).decrypt()
+                    self.get_key()
             except Exception as error:
                 DisplayError.log(error)
         # Missing value
         else:
             DisplayError.log('Set one of [ `-ef`, `-df`, `-efs`, `-dfs` ] or run with `--help`!!')
         # End of File Management
-        self.exit_handler( None, None)
     # Backup Management
     def backup_management( self ) -> None:
         # Password Database backup
@@ -238,13 +246,14 @@ class Main:
                     folder_path: str = input( "Enter the folder path: ") 
                     save_path: str = input( "Enter the save path: " )
                     if input('Do you have a key [yes/No]: ').lower()[0] == 'y':
-                        self.__key = input('Enter the key: ').encode()
+                        self.set_key()
                     outfile_path: str = Tar(
                         folder_path= folder_path,
                         save_path= save_path
                     ).folder()
                     try:
-                        Encrytion(paths= [outfile_path], key= self.__key, remove_files= True ).encrypt()
+                        self.__key = Encrytion(paths= [outfile_path], key= self.__key, remove_files= True ).encrypt()
+                        self.get_key()
                     except:
                         remove(outfile_path)
                     DisplaySaved.log( outfile_path )
@@ -252,17 +261,19 @@ class Main:
                 elif self.__args.mega_backup:
                     folder_path: str = input("Enter the folder path: ")
                     if input('Do you have a key [yes/No]: ').lower()[0] == 'y':
-                        self.__key = input('Enter the key: ').encode()
+                        # self.__key = input('Enter the key: ').encode()
+                        self.set_key()
                     outfile_path: str = Tar(
                         folder_path= folder_path,
                         save_path= self.DATABASE_PATH
                     ).folder()
                     try:
-                        Encrytion( 
+                        self.__key = Encrytion( 
                             paths= [outfile_path],
                             key= self.__key,
                             remove_files= True
                         ).encrypt()
+                        self.get_key()
                         upload = MegaUploader( 
                             file_path= f"{outfile_path}.x",
                             email= input('Enter your email on mega: '),
@@ -290,7 +301,7 @@ class Main:
         # Recovery Folder Backup
         elif self.__args.folder_recovery:
             path: str = input('Enter the file path: ')
-            self.__key = input("Enter the key: ")
+            self.set_key()
             save_path: str = input("Enter the save path: ")
             try:
                 file_path: str =  Decryption(paths=[path], key= self.__key ).decrypt()
@@ -315,11 +326,11 @@ class Main:
                 if isdatabaseenctypted:
                     # decrypt database..
                     print('Database is Encryption...')
-                    self.__key = input("Enter The Key to decrypt: ").encode()
+                    self.set_key()
                     Decryption( paths=[self.PASSWORD_EN_PATH], key=self.__key, remove_files=True ).decrypt()
             except ValueError:
                 DisplayError.log("Key Error: Wrong Key!")
-                exit(1)
+                sys.exit(1)
 
         if not decrypt and not isdatabaseenctypted:
             if not self.__key:
@@ -327,16 +338,49 @@ class Main:
                 if user_input.lower()[0] == 'y':
                     user_input = input('Did you have a key [yes/No]: ')
                     if user_input.lower()[0] == 'y':
-                        self.__key = input('Enter your key: ').encode()
+                        self.set_key()
                 else: 
                     return
-            Encrytion(paths=[self.PASSWORD_PATH], key=self.__key, remove_files=True).encrypt()
+            try:
+                self.__key = Encrytion(paths=[self.PASSWORD_PATH], key=self.__key, remove_files=True).encrypt()
+                self.get_key()
+            except ValueError:
+                DisplayError.log("Key Error: Wrong Key!")
+                sys.exit(1)
     # Exit From the xpm
     def exit_handler(self, signum, frame) -> None:
         print('\n------------------ Exit ------------------')
         self.database_stat(False)
         sys.exit(0)
+    
+    def get_key(self) -> None:
+        if not self.__constant_number:
+            try:
+                self.__constant_number = int(input("Enter the constant number to secure the key (1000 <= x <= 9999): "))
+                if x > 9999 or x < 1000: raise Exception
+            except:
+                DisplayError.log("ErrorInput: The input is not in range (1000 <= x <= 9999), I will generate a random number for you!")
+                self.__constant_number = randint(  1000, 9999  )
+                print( f"Your constant number is: {self.__constant_number}" )
+        secure_ket: bytes = Key.making(
+            key= self.__key,
+            n= self.__constant_number,
+            secure= True
+        )
+        DisplayKey.log( secure_ket.decode() )
 
+    def set_key(self) -> None:
+        try:
+            secure_ket: str = input("Enter the secure key: ")
+            self.__constant_number = int(input("Enter the constant number: "))
+            self.__key = Key.making(
+                key= secure_ket.encode(),
+                n= self.__constant_number,
+                secure= False
+            )
+        except Exception as error:
+            DisplayError.log(error)
+            sys.exit(1)
 
 if __name__=="__main__":
     parser:ArgumentParser = ArgumentParser(
