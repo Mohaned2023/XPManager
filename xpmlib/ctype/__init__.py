@@ -1,1 +1,0 @@
-from .TypeChecker import Check
