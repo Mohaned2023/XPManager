@@ -2,6 +2,7 @@ use clap::Command;
 
 mod password_manager;
 mod commands;
+mod matcheslibs;
 
 fn main() {
     let matches = Command::new("xpm")
@@ -10,4 +11,5 @@ fn main() {
         .author("Mohaned Sherhan")
         .subcommands(commands::commands())
         .get_matches();
+    matcheslibs::matches(matches);
 }
