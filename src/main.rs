@@ -3,6 +3,7 @@ use clap::Command;
 mod password_manager;
 mod commands;
 mod matcheslibs;
+mod utilities;
 
 fn main() {
     let matches = Command::new("xpm")
