@@ -1,6 +1,6 @@
 use super::Colorize;
 
-pub fn password(password: String) {
+pub fn display_one(password: String) {
     println!(
         "{} {}",
         "Password:".blue(),

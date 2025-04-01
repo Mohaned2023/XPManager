@@ -1,8 +1,6 @@
 use chrono::Local;
 use colored::Colorize;
 
-pub mod password_manager;
-
 pub struct Logger {
     name: String,
     start_time_ms: i64

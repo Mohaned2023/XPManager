@@ -3,6 +3,7 @@ use rand::seq::{IndexedRandom, SliceRandom};
 use crate::utilities;
 use crate::loglib;
 use crate::dblib;
+use crate::displaylib;
 
 fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
     let mut rng = rand::rng();
@@ -32,7 +33,7 @@ pub fn main(command: &ArgMatches) {
                         utilities::PasswordSample::Ascii
                     }
                 );
-                loglib::password_manager::password(_password.clone());
+                displaylib::passwords::display_one(_password.clone());
                 logger.info("password generated successfully");
                 if let Some(password_name) = command.get_one::<String>("save") {
                     dblib::save_password(password_name.clone(), _password);
