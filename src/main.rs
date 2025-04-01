@@ -4,6 +4,7 @@ mod password_manager;
 mod commands;
 mod matcheslibs;
 mod utilities;
+mod loglib;
 
 fn main() {
     let matches = Command::new("xpm")

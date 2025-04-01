@@ -1,6 +1,8 @@
 use clap::ArgMatches;
 use rand::seq::{IndexedRandom, SliceRandom};
 use crate::utilities;
+use crate::loglib;
+use chrono::Local;
 
 fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
     let mut rng = rand::rng();
@@ -19,26 +21,28 @@ fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
 
 pub fn main(command: &ArgMatches) {
     match command.get_one::<String>("length") {
-        Some(length) => {
-            let length: u16 = length
-                .parse()
-                .expect(
-                    &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX)
+        Some(length) => match length.parse::<u16>() {
+            Ok(length) => {
+                let start_time = Local::now().timestamp_millis();
+                let mut _password: String = generate(
+                    length,
+                    if *command.get_one::<bool>("hex").unwrap() {
+                        utilities::PasswordSample::Hex
+                    } else {
+                        utilities::PasswordSample::Ascii
+                    }
                 );
-            let mut _password: String = generate(
-                length,
-                if *command.get_one::<bool>("hex").unwrap() {
-                    utilities::PasswordSample::Hex
-                } else {
-                    utilities::PasswordSample::Ascii
+                loglib::password_manager::password(_password);
+                let delay_ms = Local::now().timestamp_millis()-start_time;
+                loglib::info("password generated successfully", delay_ms);
+                if let Some(password_name) = command.get_one::<String>("save") {
+                    // TODO: Save the password.
                 }
-            );
-            // TODO: Use the loglib.
-            println!("password: {}", _password);
-            if let Some(password_name) = command.get_one::<String>("save") {
-                // TODO: Save the password.
-            }
+            },
+            Err(_) => loglib::error(
+                &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX)
+            ),
         },
-        _ => eprintln!("Error: Run with 'password-manager generate --help'")
+        _ => loglib::error("Run with 'password-manager generate --help'")
     }
 }
