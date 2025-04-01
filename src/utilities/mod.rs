@@ -59,3 +59,14 @@ pub fn get_password_manager_db_path() -> PathBuf {
 pub fn is_encrypted(path: &PathBuf) -> bool {
     path.extension().unwrap() == "x"
 }
+
+pub fn input(message: &str) -> String {
+    use std::io::Write;
+    print!("{}", message);
+    std::io::stdout().flush().expect("Flush Error!");
+    let mut line: String = String::new();
+    std::io::stdin()
+        .read_line(&mut line)
+        .expect("Read line Error!");
+    return line.trim().to_owned();
+}

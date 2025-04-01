@@ -1,4 +1,4 @@
-use clap::ArgMatches;
+use super::ArgMatches;
 use rand::seq::{IndexedRandom, SliceRandom};
 use crate::utilities;
 use crate::loglib;
