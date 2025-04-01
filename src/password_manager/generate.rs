@@ -2,7 +2,6 @@ use clap::ArgMatches;
 use rand::seq::{IndexedRandom, SliceRandom};
 use crate::utilities;
 use crate::loglib;
-use chrono::Local;
 
 fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
     let mut rng = rand::rng();
@@ -20,10 +19,10 @@ fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
 }
 
 pub fn main(command: &ArgMatches) {
+    let logger = loglib::Logger::new("gernerate-password");
     match command.get_one::<String>("length") {
         Some(length) => match length.parse::<u16>() {
             Ok(length) => {
-                let start_time = Local::now().timestamp_millis();
                 let mut _password: String = generate(
                     length,
                     if *command.get_one::<bool>("hex").unwrap() {
@@ -33,16 +32,15 @@ pub fn main(command: &ArgMatches) {
                     }
                 );
                 loglib::password_manager::password(_password);
-                let delay_ms = Local::now().timestamp_millis()-start_time;
-                loglib::info("password generated successfully", delay_ms);
+                logger.info("password generated successfully");
                 if let Some(password_name) = command.get_one::<String>("save") {
                     // TODO: Save the password.
                 }
             },
-            Err(_) => loglib::error(
+            Err(_) => logger.error(
                 &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX)
             ),
         },
-        _ => loglib::error("Run with 'password-manager generate --help'")
+        _ => logger.error("Run with 'password-manager generate --help'")
     }
 }
