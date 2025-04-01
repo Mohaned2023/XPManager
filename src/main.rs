@@ -5,6 +5,7 @@ mod commands;
 mod matcheslibs;
 mod utilities;
 mod loglib;
+mod dblib;
 
 fn main() {
     let matches = Command::new("xpm")
