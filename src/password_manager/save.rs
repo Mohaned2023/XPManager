@@ -1,4 +1,5 @@
 use super::ArgMatches;
+use crate::errorlib;
 use crate::loglib;
 use crate::utilities;
 use crate::dblib;
@@ -10,8 +11,10 @@ pub fn main(command: &ArgMatches) {
         Some(name) => {
             let password: String = utilities::input("Enter the password: ");
             if password.len() < 1 {
-                logger.error("password must be at least one letter long!");
-                return;
+                logger.error(
+                    "password must be at least one letter long!",
+                    errorlib::ExitErrorCode::UsageError
+                );
             }
             let pm_db_state = filelib::password_manager_db_state();
             if pm_db_state == filelib::FileState::NotFound {
@@ -30,6 +33,9 @@ pub fn main(command: &ArgMatches) {
                 password
             );
         }
-        _ => logger.error("<NAME> must be string!"), // It will not run..
+        _ => logger.error(
+            "<NAME> must be string!",
+            errorlib::ExitErrorCode::UsageError
+        ), // It will not run..
     }
 }

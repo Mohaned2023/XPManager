@@ -2,6 +2,7 @@ use crate::loglib;
 use rusqlite::params;
 use rusqlite::Connection;
 use std::path::PathBuf;
+use crate::errorlib;
 
 pub struct PasswordInfoForm {
     pub id: i32,
@@ -20,7 +21,8 @@ pub fn create_passwords_table(password_manager_db_path: PathBuf) {
         logger.info("passwords table created successfully.");
     } else {
         logger.error(
-            &format!("can NOT create connection with '{}'", password_manager_db_path.display())
+            &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+            errorlib::ExitErrorCode::DBConnection
         );
     }
 }
@@ -34,7 +36,8 @@ pub fn save_password(password_manager_db_path: PathBuf, name: String, password: 
         );
     } else {
         logger.error(
-            &format!("can NOT create connection with '{}'", password_manager_db_path.display())
+            &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+            errorlib::ExitErrorCode::DBConnection
         );
     }
 }
@@ -57,11 +60,10 @@ pub fn find_password(password_manager_db_path: PathBuf, string: String) -> Vec<P
                 .collect::<Result<Vec<_>, _>>();
             return password.unwrap();
         }
-        logger.error("can NOT create the query!");
-        panic!("can NOT create the query!");
+        logger.error("can NOT create the query!", errorlib::ExitErrorCode::NoDataAvilable);
     }
     logger.error(
-        &format!("can NOT create connection with '{}'", password_manager_db_path.display())
+        &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+        errorlib::ExitErrorCode::DBConnection
     );
-    panic!("can NOT create connection!");
 }

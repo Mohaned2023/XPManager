@@ -1,5 +1,6 @@
 use chrono::Local;
 use colored::Colorize;
+use crate::errorlib;
 
 pub struct Logger {
     name: String,
@@ -31,12 +32,13 @@ impl Logger {
         )
     }
 
-    pub fn error(&self, message: &str) {
+    pub fn error(&self, message: &str, exit_code: errorlib::ExitErrorCode ) -> ! {
         eprintln!(
             "[{}] - [{}] {}",
             "ERROR".red(),
             self.name.red(),
             message.red()
-        )
+        );
+        std::process::exit(exit_code as i32);
     }
 }

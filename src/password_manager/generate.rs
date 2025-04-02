@@ -1,5 +1,6 @@
 use super::ArgMatches;
 use rand::seq::{IndexedRandom, SliceRandom};
+use crate::errorlib;
 use crate::filelib;
 use crate::utilities;
 use crate::loglib;
@@ -56,9 +57,13 @@ pub fn main(command: &ArgMatches) {
                 displaylib::passwords::display_one(_password);
             },
             Err(_) => logger.error(
-                &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX)
+                &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX),
+                errorlib::ExitErrorCode::UsageError
             ),
         },
-        _ => logger.error("Run with 'password-manager generate --help'")
+        _ => logger.error(
+            "Run with 'password-manager generate --help'",
+            errorlib::ExitErrorCode::UsageError
+        )
     }
 }

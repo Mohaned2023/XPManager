@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use dirs::data_dir;
-use crate::loglib;
+use crate::{errorlib, loglib};
 
 #[derive(PartialEq)]
 pub enum FileState {
@@ -21,17 +21,17 @@ pub fn create_file(path: PathBuf) {
         if !parent.exists() {
             if let Err(_) = std::fs::create_dir_all(parent) {
                 logger.error(
-                    &format!("can NOT create directory at '{}'!", parent.display())
+                    &format!("can NOT create directory at '{}'!", parent.display()),
+                    errorlib::ExitErrorCode::CannotCreateDir
                 );
-                panic!("can NOT create directory!");
             }
         }
     }
     if let Err(_) = std::fs::File::create(&path) {
         logger.error(
-            &format!("can NOT create the at '{}'!", path.display())
+            &format!("can NOT create the at '{}'!", path.display()),
+                errorlib::ExitErrorCode::CannotCreateFile
             );
-        panic!("Can NOT create the password manager database!");
     }
     logger.info(
         &format!("create password manager database at '{}'", path.display())
@@ -43,8 +43,7 @@ pub fn get_pm_encrypted_db_path() -> PathBuf {
     if let Some(data_path) = data_dir() {
         return data_path.join("XPManager/data/passwords.db.x");
     } else {
-        logger.error("can NOT get the system data directory path!");
-        panic!("Can NOT get the system data directory path!")
+        logger.error("can NOT get the system data directory path!", errorlib::ExitErrorCode::CannotAccessDataDir);
     }
 }
 
@@ -53,8 +52,10 @@ pub fn get_pm_decrypted_db_path() -> PathBuf {
     if let Some(data_path) = data_dir() {
         return data_path.join("XPManager/data/passwords.db");
     } else {
-        logger.error("can NOT get the system data directory path!");
-        panic!("Can NOT get the system data directory path!")
+        logger.error(
+            "can NOT get the system data directory path!", 
+            errorlib::ExitErrorCode::CannotAccessDataDir
+        );
     }
 }
 

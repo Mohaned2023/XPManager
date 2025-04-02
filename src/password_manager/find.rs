@@ -3,6 +3,7 @@ use crate::loglib;
 use crate::filelib;
 use crate::dblib;
 use crate::displaylib;
+use crate::errorlib;
 
 pub fn main(command: &ArgMatches) {
     let logger = loglib::Logger::new("find-password");
@@ -10,8 +11,10 @@ pub fn main(command: &ArgMatches) {
         Some(string) => {
             let pm_db_state = filelib::password_manager_db_state();
             if pm_db_state == filelib::FileState::NotFound {
-                logger.error("password manager database is empty!");
-                return;
+                logger.error(
+                    "password manager database is empty!",
+                    errorlib::ExitErrorCode::NoDataAvilable
+                );
             } else if pm_db_state == filelib::FileState::Encrypted {
                 // TODO: decrypt the db.
                 // TODO: encrypt the db.
@@ -24,6 +27,9 @@ pub fn main(command: &ArgMatches) {
             );
             displaylib::passwords::display_many(passwords, string.clone());
         },
-        _ => logger.error("<STRING> must be string!"), // It will not run..
+        _ => logger.error(
+            "<STRING> must be string!",
+            errorlib::ExitErrorCode::UsageError
+        ), // It will not run..
     }
 }
