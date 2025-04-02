@@ -2,6 +2,13 @@ use std::path::PathBuf;
 use dirs::data_dir;
 use crate::loglib;
 
+#[derive(PartialEq)]
+pub enum FileState {
+    Encrypted,
+    Decrypted,
+    NotFound
+}
+
 pub fn get_password_manager_db_path() -> PathBuf {
     let logger = loglib::Logger::new("password-manager-database");
     if let Some(data_path) = data_dir() {
@@ -36,4 +43,15 @@ pub fn get_password_manager_db_path() -> PathBuf {
 
 pub fn is_encrypted(path: &PathBuf) -> bool {
     path.extension().unwrap() == "x"
+}
+
+pub fn password_manager_db_state() -> FileState {
+    if let Some(data_path) = data_dir() {
+        if data_path.join("XPManager/data/passwords.db.x").exists() {
+            return FileState::Encrypted;
+        } else if data_path.join("XPManager/data/passwords.db").exists() {
+            return FileState::Decrypted;
+        }
+    }
+    return FileState::NotFound;
 }

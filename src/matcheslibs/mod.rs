@@ -9,6 +9,7 @@ pub fn matches(arg_matches: ArgMatches) {
             match command.subcommand() {
                 Some(("generate", command)) => password_manager::generate::main(command),
                 Some(("save", command)) =>     password_manager::save::main(command),
+                Some(("find", command)) =>     password_manager::find::main(command),
                 _ => logger.error("Run with 'password-manager --help'")
             }
         },
