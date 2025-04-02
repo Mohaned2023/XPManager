@@ -1,12 +1,12 @@
 use crate::loglib;
-use crate::utilities;
+use crate::filelib;
 use rusqlite::params;
 use rusqlite::Connection;
 
 pub fn save_password(name: String, password: String) {
     let logger = loglib::Logger::new("save-password");
-    let mut password_manager_db_path = utilities::get_password_manager_db_path();
-    if utilities::is_encrypted(&password_manager_db_path) {
+    let mut password_manager_db_path = filelib::get_password_manager_db_path();
+    if filelib::is_encrypted(&password_manager_db_path) {
         // TODO: decrypt the db.
         // TODO: encrypt the db.
         // TODO: secure delete the decrypt db.
