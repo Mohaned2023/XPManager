@@ -16,8 +16,12 @@ pub fn main(command: &ArgMatches) {
                 // TODO: decrypt the db.
                 // TODO: encrypt the db.
                 // TODO: secure delete the decrypt db.
+                todo!("pm database is encrypted!");
             }
-            let passwords = dblib::find_password(string.clone());
+            let passwords = dblib::find_password(
+                filelib::get_pm_decrypted_db_path(),
+                string.clone()
+            );
             displaylib::passwords::display_many(passwords, string.clone());
         },
         _ => logger.error("<STRING> must be string!"), // It will not run..

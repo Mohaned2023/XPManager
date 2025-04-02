@@ -9,49 +9,60 @@ pub enum FileState {
     NotFound
 }
 
-pub fn get_password_manager_db_path() -> PathBuf {
-    let logger = loglib::Logger::new("password-manager-database");
-    if let Some(data_path) = data_dir() {
-        let xpm_data_path = data_path.join("XPManager/data");
-        let de_file_path = xpm_data_path.join("passwords.db");
-        let en_file_path = xpm_data_path.join("passwords.db.x");
-        if !xpm_data_path.exists(){
-            if let Err(_) = std::fs::create_dir_all(&xpm_data_path){
-                logger.error("can NOT create the data directory!");
-                panic!("Can NOT create the data directory!");
+pub fn create_file(path: PathBuf) {
+    let logger = loglib::Logger::new("create-file");
+    if path.exists() {
+        logger.info(
+            &format!("file found at '{}'", path.display())
+        );
+        return;
+    }
+    if let Some(parent) = path.parent() {
+        if !parent.exists() {
+            if let Err(_) = std::fs::create_dir_all(parent) {
+                logger.error(
+                    &format!("can NOT create directory at '{}'!", parent.display())
+                );
+                panic!("can NOT create directory!");
             }
-            logger.info(
-                &format!("create data directory at '{}'", xpm_data_path.display())
-            );
         }
-        if en_file_path.exists() { return en_file_path; }
-        if !de_file_path.exists() {
-            if let Err(_) = std::fs::File::create(&de_file_path) {
-                logger.error("can NOT create the password manager database!");
-                panic!("Can NOT create the password manager database!");
-            }
-            logger.info(
-                &format!("create password manager database at '{}'", de_file_path.display())
+    }
+    if let Err(_) = std::fs::File::create(&path) {
+        logger.error(
+            &format!("can NOT create the at '{}'!", path.display())
             );
-        } 
-        return de_file_path;
+        panic!("Can NOT create the password manager database!");
+    }
+    logger.info(
+        &format!("create password manager database at '{}'", path.display())
+    );
+}
+
+pub fn get_pm_encrypted_db_path() -> PathBuf {
+    let logger = loglib::Logger::new("get-pm-encrypted-db-path");
+    if let Some(data_path) = data_dir() {
+        return data_path.join("XPManager/data/passwords.db.x");
     } else {
         logger.error("can NOT get the system data directory path!");
         panic!("Can NOT get the system data directory path!")
     }
 }
 
-pub fn is_encrypted(path: &PathBuf) -> bool {
-    path.extension().unwrap() == "x"
+pub fn get_pm_decrypted_db_path() -> PathBuf {
+    let logger = loglib::Logger::new("get-pm-decrypted-db-path");
+    if let Some(data_path) = data_dir() {
+        return data_path.join("XPManager/data/passwords.db");
+    } else {
+        logger.error("can NOT get the system data directory path!");
+        panic!("Can NOT get the system data directory path!")
+    }
 }
 
 pub fn password_manager_db_state() -> FileState {
-    if let Some(data_path) = data_dir() {
-        if data_path.join("XPManager/data/passwords.db.x").exists() {
-            return FileState::Encrypted;
-        } else if data_path.join("XPManager/data/passwords.db").exists() {
-            return FileState::Decrypted;
-        }
+    if get_pm_encrypted_db_path().exists() {
+        return FileState::Encrypted;
+    } else if get_pm_decrypted_db_path().exists() {
+        return FileState::Decrypted;
     }
     return FileState::NotFound;
 }

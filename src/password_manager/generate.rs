@@ -1,5 +1,6 @@
 use super::ArgMatches;
 use rand::seq::{IndexedRandom, SliceRandom};
+use crate::filelib;
 use crate::utilities;
 use crate::loglib;
 use crate::dblib;
@@ -33,11 +34,26 @@ pub fn main(command: &ArgMatches) {
                         utilities::PasswordSample::Ascii
                     }
                 );
-                displaylib::passwords::display_one(_password.clone());
                 logger.info("password generated successfully");
                 if let Some(password_name) = command.get_one::<String>("save") {
-                    dblib::save_password(password_name.clone(), _password);
+                    let pm_db_state = filelib::password_manager_db_state();
+                    let pm_decrypted_path = filelib::get_pm_decrypted_db_path();
+                    if pm_db_state == filelib::FileState::NotFound {
+                        filelib::create_file(pm_decrypted_path.clone());
+                        dblib::create_passwords_table(pm_decrypted_path.clone());
+                    } else if pm_db_state == filelib::FileState::Encrypted {
+                        // TODO: decrypt the db.
+                        // TODO: encrypt the db.
+                        // TODO: secure delete the decrypt db.
+                        todo!("pm database is encrypted!");
+                    }
+                    dblib::save_password(
+                        pm_decrypted_path,
+                        password_name.clone(),
+                        _password.clone()
+                    );
                 }
+                displaylib::passwords::display_one(_password);
             },
             Err(_) => logger.error(
                 &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX)
