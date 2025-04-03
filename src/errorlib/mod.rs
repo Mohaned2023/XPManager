@@ -6,4 +6,5 @@ pub enum ExitErrorCode {
     CannotCreateFile    = 74,
     CannotAccessDataDir = 72,
     DBConnection        = 111,
+    CanNotDeleteFile    = 126,
 }

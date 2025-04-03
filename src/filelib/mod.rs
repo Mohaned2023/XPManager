@@ -67,3 +67,15 @@ pub fn password_manager_db_state() -> FileState {
     }
     return FileState::NotFound;
 }
+
+pub fn delete_file(path: PathBuf) {
+    let logger = loglib::Logger::new("delete-file");
+    if path.exists() {
+        if let Err(_) = std::fs::remove_file(&path) {
+            logger.error(
+                &format!("can NOT delete file at '{}'!", path.display()),
+                errorlib::ExitErrorCode::CanNotDeleteFile
+            );
+        }
+    }
+}
