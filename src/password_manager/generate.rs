@@ -23,7 +23,7 @@ fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
 }
 
 pub fn main(command: &ArgMatches) {
-    let logger = loglib::Logger::new("gernerate-password");
+    let logger = loglib::Logger::new("generate-password");
     match command.get_one::<String>("length") {
         Some(length) => match length.parse::<u16>() {
             Ok(length) => {

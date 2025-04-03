@@ -15,6 +15,10 @@ impl Logger {
         }
     }
 
+    pub fn start(&mut self) {
+        self.start_time_ms = Local::now().timestamp_millis();
+    }
+
     pub fn end(&self) -> String {
         format!(
             "{}ms",

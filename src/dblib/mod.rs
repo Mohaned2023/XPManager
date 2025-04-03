@@ -97,3 +97,51 @@ pub fn find_password(password_manager_db_path: PathBuf, string: String) -> Vec<P
 pub fn get_passwords(password_manager_db_path: PathBuf) -> Vec<PasswordInfoForm> {
     find_password(password_manager_db_path, "".to_owned())
 }
+
+pub fn update_password(password_manager_db_path: PathBuf, id: String, password: String) {
+    let logger = loglib::Logger::new("update-password");
+    if let Ok(conn) = Connection::open(&password_manager_db_path) {
+        if let Err(_) = conn.execute("
+                UPDATE passwords 
+                SET password = ?1,
+                update_at = CURRENT_TIMESTAMP 
+                WHERE id=?2
+            ",
+            params![password, id]
+        ) {
+            logger.error(
+                "can NOT update the password!", 
+                errorlib::ExitErrorCode::NoDataAvilable
+            );
+        }
+    } else {
+        logger.error(
+            &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+            errorlib::ExitErrorCode::DBConnection
+        );
+    }
+}
+
+pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name: String) {
+    let logger = loglib::Logger::new("update-password");
+    if let Ok(conn) = Connection::open(&password_manager_db_path) {
+        if let Err(_) = conn.execute("
+                UPDATE passwords 
+                SET name = ?1,
+                update_at = CURRENT_TIMESTAMP 
+                WHERE id=?2
+            ", 
+            params![name, id]
+        ) {
+            logger.error(
+                "can NOT update the password!", 
+                errorlib::ExitErrorCode::NoDataAvilable
+            );
+        }
+    } else {
+        logger.error(
+            &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+            errorlib::ExitErrorCode::DBConnection
+        );
+    }
+}
