@@ -21,6 +21,15 @@ pub fn matches(arg_matches: ArgMatches) {
                 )
             }
         },
+        Some(("encryption-manager", command)) => {
+            match command.subcommand() {
+                
+                _ => logger.error(
+                    "Run with 'encryption-manager --help'",
+                    errorlib::ExitErrorCode::UsageError
+                )
+            }
+        }
         _ => logger.error(
             "Run with '--help'",
             errorlib::ExitErrorCode::UsageError

@@ -1,6 +1,7 @@
 use clap::Command;
 
 mod password_manager;
+mod encryption_manager;
 mod commands;
 mod matcheslibs;
 mod utilities;
