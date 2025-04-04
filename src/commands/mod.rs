@@ -43,8 +43,8 @@ pub fn commands() -> Vec<Command> {
                     .alias("de")
                     .about("Decrypt the password manager database."),
             ]),
-        Command::new("file-manager")
-            .alias("fm")
+        Command::new("encryption-manager")
+            .alias("em")
             .about("Encrypt/Decrypt file and folder.")
             .subcommands([
                 Command::new("encrypt-file")
