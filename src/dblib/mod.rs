@@ -160,3 +160,20 @@ pub fn get_passwords_number(password_manager_db_path: PathBuf) -> usize {
         errorlib::ExitErrorCode::DBConnection
     );
 }
+
+pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
+    let logger = loglib::Logger::new("dblib");
+    if let Ok(conn) = Connection::open(&password_manager_db_path) {
+        return conn.execute("
+                DELETE FROM passwords 
+                WHERE id=?1
+            ",
+            params![id]
+        ).unwrap_or(0);
+    } else {
+        logger.error(
+            &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+            errorlib::ExitErrorCode::DBConnection
+        );
+    }
+}
