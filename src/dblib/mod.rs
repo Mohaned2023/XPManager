@@ -145,3 +145,18 @@ pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name:
         );
     }
 }
+
+pub fn get_passwords_number(password_manager_db_path: PathBuf) -> usize {
+    let logger = loglib::Logger::new("dblib");
+    if let Ok(conn) = Connection::open(&password_manager_db_path) {
+        return conn.query_row(
+            "SELECT COUNT(*) FROM passwords", 
+            [],
+            |row| row.get::<_, usize>(0),
+        ).unwrap();
+    }
+    logger.error(
+        &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
+        errorlib::ExitErrorCode::DBConnection
+    );
+}

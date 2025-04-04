@@ -13,6 +13,7 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("find", command)) =>     password_manager::find::main(command),
                 Some(("show", command)) =>     password_manager::show::main(command),
                 Some(("update", command)) =>   password_manager::update::main(command),
+                Some(("count", command)) =>    password_manager::count::main(command),
                 _ => logger.error(
                     "Run with 'password-manager --help'",
                     errorlib::ExitErrorCode::UsageError
