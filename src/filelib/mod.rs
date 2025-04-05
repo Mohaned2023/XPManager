@@ -1,5 +1,6 @@
 pub mod pm;
 
+use std::ffi::OsStr;
 use std::path::{PathBuf, Path};
 use std::fs::OpenOptions;
 use std::io::{Seek, SeekFrom, Write};
@@ -85,6 +86,18 @@ fn wipe_file(path: String, wipe_type: WipeType) {
             } else { size };
             let mut pos= 0u64;
             let mut rng = rand::rng();
+            // Make the data vec based on the wipe type.
+            let data = if wipe_type == WipeType::Random {
+                // Make a static rng for all buffers.
+                // When it is a static rng the speed is up!
+                let mut data = vec![0u8; size];
+                rng.fill(&mut data[..]);
+                data
+            } else if wipe_type == WipeType::BOne {
+                vec![1u8; size]
+            } else {
+                vec![0u8; size]
+            };
             loop {
                 if pos + size as u64 > len && pos < len {
                     // if len = 65KB and pos = 64KB we have 1KB to be
@@ -99,15 +112,6 @@ fn wipe_file(path: String, wipe_type: WipeType) {
                         errorlib::ExitErrorCode::NoDataAvilable
                     );
                 }
-                let data = if wipe_type == WipeType::Random {
-                    let mut data = vec![0u8; size];
-                    rng.fill(&mut data[..]);
-                    data
-                } else if wipe_type == WipeType::BOne {
-                    vec![1u8; size]
-                } else {
-                    vec![0u8; size]
-                };
                 if let Err(_) = file.write_all(&data) {
                     logger.error(
                         "can NOT write to the file!", 
@@ -127,14 +131,11 @@ fn wipe_file(path: String, wipe_type: WipeType) {
 }
 
 pub fn wipe_delete(path: String) {
-    // We will use 4 times wiping:
-    // 1. with 1s.
-    // 2. with random data.
-    // 3. with random data.
-    // 4. with 0s.
-    wipe_file(path.clone(), WipeType::BOne);
-    wipe_file(path.clone(), WipeType::Random);
-    wipe_file(path.clone(), WipeType::BZero);
+    // We will use 4 levels wiping:
+    wipe_file(path.clone(), WipeType::BOne);   // L1: with 1s.
+    wipe_file(path.clone(), WipeType::Random); // L2: with static random data.
+    wipe_file(path.clone(), WipeType::Random); // L3: with static random data.
+    wipe_file(path.clone(), WipeType::BZero);  // L4: with 0s.
     delete_file(PathBuf::new().join(path));
 }
 
@@ -142,7 +143,7 @@ pub fn get_file_state(path: String) -> FileState {
     let path = std::path::Path::new(&path);
     let mut _state: FileState;
     if path.extension()
-        .unwrap()
+        .unwrap_or(&OsStr::new(""))
         .to_str()
         .unwrap() == XPM_EXTENSION {
             _state = FileState::Encrypted;
@@ -157,4 +158,13 @@ pub fn get_file_state(path: String) -> FileState {
 
 pub fn make_encrypt_path(path: String) -> String {
     format!("{}.{}", path, XPM_EXTENSION)
+}
+
+pub fn make_decrypt_path(path: String) -> String{
+    let path_split = path
+        .split(".")
+        .collect::<Vec<&str>>();
+
+    path_split[..path_split.len()-1]
+        .join(".")
 }

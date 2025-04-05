@@ -25,6 +25,7 @@ pub fn matches(arg_matches: ArgMatches) {
         Some(("encryption-manager", command)) => {
             match command.subcommand() {
                 Some(("encrypt-file", command)) => encryption_manager::encrypt_file::main(command),
+                Some(("decrypt-file", command)) => encryption_manager::decrypt_file::main(command),
                 _ => logger.error(
                     "Run with 'encryption-manager --help'",
                     errorlib::ExitErrorCode::UsageError
