@@ -60,7 +60,8 @@ pub fn commands() -> Vec<Command> {
                     .about("Decrypt file.")
                     .args([
                         arg!(<PATH>   "File path (e.g. \"/home/user/important/image.png.x\")."),
-                        arg!(--delete "Delete the origin file.")
+                        arg!(--delete "Delete the origin file."),
+                        arg!(--xpmv1  "Decrypt XPManager v1.0 file.")
                     ]),
                 Command::new("encrypt-dir")
                     .alias("end")
@@ -74,7 +75,8 @@ pub fn commands() -> Vec<Command> {
                     .about("Decrypt directory.")
                     .args([
                         arg!(<PATH>   "Directory path (e.g. \"/home/user/important\")."),
-                        arg!(--delete "Delete the origin directory.")
+                        arg!(--delete "Delete the origin directory."),
+                        arg!(--xpmv1  "Decrypt XPManager v1.0 directory.")
                     ]),
             ]),
         Command::new("backup-manager")

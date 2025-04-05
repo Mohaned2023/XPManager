@@ -15,6 +15,8 @@ pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("decrypt-dir");
     if let Some(path) = command.get_one::<String>("PATH") {
         let mut files_paths: Vec<PathBuf> = vec![];
+        let is_xpmv1 = *command.get_one::<bool>("xpmv1").unwrap_or(&false);
+        let is_delete = *command.get_one::<bool>("delete").unwrap_or(&false);
         let key = utilities::input("Enter your key: ");
         logger.start();
         filelib::dir_files_tree(
@@ -32,14 +34,24 @@ pub fn main(command: &ArgMatches) {
                 );
                 continue;
             }
-            decrypt_file::decrypt(
-                file_path_string.clone(),
-                key.clone()
-            );
-            filelib::wipe_delete(file_path_string.clone());
+            if is_xpmv1 {
+                decrypt_file::xpmv1_decryption(
+                    file_path_string.clone(),
+                    key.clone()
+                );
+            } else {
+                decrypt_file::decrypt(
+                    file_path_string.clone(),
+                    key.clone()
+                );
+            }
             logger.info(
-                &format!("decrypted and wiped '{}'.", file.display())
+                &format!("decrypted '{}'.", file.display())
             );
+            if is_delete {
+                filelib::wipe_delete(file_path_string.clone());
+                logger.info("file was wiped successfully.");
+            }
         }
         logger.info("directory decrypted successfully.");
         displaylib::key::display(key);
