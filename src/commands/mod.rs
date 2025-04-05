@@ -67,7 +67,7 @@ pub fn commands() -> Vec<Command> {
                     .about("Encrypt directory.")
                     .args([
                         arg!(<PATH>   "Directory path (e.g. \"/home/user/important\")."),
-                        arg!(--delete "Delete the origin directory.")
+                        arg!(--key    "Use custom key.")
                     ]),
                 Command::new("decrypt-dir")
                     .alias("ded")

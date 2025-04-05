@@ -168,3 +168,47 @@ pub fn make_decrypt_path(path: String) -> String{
     path_split[..path_split.len()-1]
         .join(".")
 }
+
+pub fn dir_files_tree(folder_path: PathBuf, files_paths: &mut Vec<PathBuf> ){
+    let logger = loglib::Logger::new("dir-files-tree");
+    if !folder_path.exists() {
+        logger.error(
+            "can NOT find the dir!", 
+            errorlib::ExitErrorCode::NoDataAvilable
+        );
+    }
+    if let Ok(paths) = folder_path.read_dir() {
+        for p in paths {
+            if let Ok(entry) = p {
+                if let Ok(file_type) = entry.file_type() {
+                    let entry_path = entry.path();
+                    if file_type.is_file() {
+                        files_paths.push(entry_path);
+                    } else if file_type.is_dir() {
+                        dir_files_tree(entry_path, files_paths);
+                    } else {
+                        logger.error(
+                            &format!("unsupported directory at '{}'!", entry_path.display()),
+                            errorlib::ExitErrorCode::NoDataAvilable
+                        )
+                    }
+                } else {
+                    logger.error(
+                        "can NOT get the file/folder type!", 
+                        errorlib::ExitErrorCode::NoDataAvilable
+                    )
+                }
+            } else {
+                logger.error(
+                    "can NOT get the folder entry!", 
+                    errorlib::ExitErrorCode::NoDataAvilable
+                )
+            }
+        }
+    } else {
+        logger.error(
+            "can NOT get the folder data!", 
+            errorlib::ExitErrorCode::NoDataAvilable
+        )
+    }
+}
