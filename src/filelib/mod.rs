@@ -1,3 +1,5 @@
+pub mod pm;
+
 use std::path::{PathBuf, Path};
 use std::fs::OpenOptions;
 use std::io::{Seek, SeekFrom, Write};
@@ -48,36 +50,6 @@ pub fn create_file(path: PathBuf) {
     logger.info(
         &format!("create password manager database at '{}'", path.display())
     );
-}
-
-pub fn get_pm_encrypted_db_path() -> PathBuf {
-    let logger = loglib::Logger::new("get-pm-encrypted-db-path");
-    if let Some(data_path) = data_dir() {
-        return data_path.join("XPManager/data/passwords.db.x");
-    } else {
-        logger.error("can NOT get the system data directory path!", errorlib::ExitErrorCode::CannotAccessDataDir);
-    }
-}
-
-pub fn get_pm_decrypted_db_path() -> PathBuf {
-    let logger = loglib::Logger::new("get-pm-decrypted-db-path");
-    if let Some(data_path) = data_dir() {
-        return data_path.join("XPManager/data/passwords.db");
-    } else {
-        logger.error(
-            "can NOT get the system data directory path!", 
-            errorlib::ExitErrorCode::CannotAccessDataDir
-        );
-    }
-}
-
-pub fn password_manager_db_state() -> FileState {
-    if get_pm_encrypted_db_path().exists() {
-        return FileState::Encrypted;
-    } else if get_pm_decrypted_db_path().exists() {
-        return FileState::Decrypted;
-    }
-    return FileState::NotFound;
 }
 
 pub fn delete_file(path: PathBuf) {
@@ -184,5 +156,5 @@ pub fn get_file_state(path: String) -> FileState {
 }
 
 pub fn make_encrypt_path(path: String) -> String {
-    path + "." + XPM_EXTENSION
+    format!("{}.{}", path, XPM_EXTENSION)
 }

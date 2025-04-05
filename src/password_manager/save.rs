@@ -16,10 +16,10 @@ pub fn main(command: &ArgMatches) {
                     errorlib::ExitErrorCode::UsageError
                 );
             }
-            let pm_db_state = filelib::password_manager_db_state();
+            let pm_db_state = filelib::pm::db_state();
             if pm_db_state == filelib::FileState::NotFound {
                 filelib::create_file(
-                    filelib::get_pm_decrypted_db_path()
+                    filelib::pm::get_decrypted_db_path()
                 );
             } else if pm_db_state == filelib::FileState::Encrypted {
                 // TODO: decrypt the db.
@@ -28,7 +28,7 @@ pub fn main(command: &ArgMatches) {
                 todo!("pm database is encrypted!");
             }
             dblib::save_password(
-                filelib::get_pm_decrypted_db_path(),
+                filelib::pm::get_decrypted_db_path(),
                 name.clone(),
                 password
             );

@@ -40,7 +40,7 @@ pub fn main(command: &ArgMatches) {
                     errorlib::ExitErrorCode::UsageError
                 )
             }
-            let pm_db_state = filelib::password_manager_db_state();
+            let pm_db_state = filelib::pm::db_state();
             if pm_db_state == filelib::FileState::NotFound {
                 logger.error(
                     "password manager database is empty!",
@@ -52,7 +52,7 @@ pub fn main(command: &ArgMatches) {
                 // TODO: secure delete the decrypt db.
                 todo!("pm database is encrypted!");
             }
-            let pm_db_path = filelib::get_pm_decrypted_db_path();
+            let pm_db_path = filelib::pm::get_decrypted_db_path();
             if _password.len() > 0 {
                 dblib::update_password(
                     pm_db_path.clone(), 

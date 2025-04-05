@@ -6,7 +6,7 @@ use crate::errorlib;
 
 pub fn main( _: &ArgMatches ) {
     let logger = loglib::Logger::new("count-password");
-    let pm_db_state = filelib::password_manager_db_state();
+    let pm_db_state = filelib::pm::db_state();
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "password manager database is empty!",
@@ -19,7 +19,7 @@ pub fn main( _: &ArgMatches ) {
         todo!("pm database is encrypted!");
     }
     let number_of_passwords = dblib::get_passwords_number(
-        filelib::get_pm_decrypted_db_path()
+        filelib::pm::get_decrypted_db_path()
     );
     logger.info(
         &format!("there is {} in the database.", number_of_passwords)

@@ -37,8 +37,8 @@ pub fn main(command: &ArgMatches) {
                 );
                 logger.info("password generated successfully");
                 if let Some(password_name) = command.get_one::<String>("save") {
-                    let pm_db_state = filelib::password_manager_db_state();
-                    let pm_decrypted_path = filelib::get_pm_decrypted_db_path();
+                    let pm_db_state = filelib::pm::db_state();
+                    let pm_decrypted_path = filelib::pm::get_decrypted_db_path();
                     if pm_db_state == filelib::FileState::NotFound {
                         filelib::create_file(pm_decrypted_path.clone());
                         dblib::create_passwords_table(pm_decrypted_path.clone());

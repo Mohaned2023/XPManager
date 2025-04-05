@@ -8,7 +8,7 @@ pub fn main( command: &ArgMatches ) {
     let logger = loglib::Logger::new("delete-password");
     match command.get_one::<String>("ID") {
         Some(id) => {
-            let pm_db_state = filelib::password_manager_db_state();
+            let pm_db_state = filelib::pm::db_state();
             if pm_db_state == filelib::FileState::NotFound {
                 logger.error(
                     "password manager database is empty!",
@@ -21,7 +21,7 @@ pub fn main( command: &ArgMatches ) {
                 todo!("pm database is encrypted!");
             }
             let rows = dblib::delete_password(
-                filelib::get_pm_decrypted_db_path(),
+                filelib::pm::get_decrypted_db_path(),
                 id.clone()
             );
             logger.info(
