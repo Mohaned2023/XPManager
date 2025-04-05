@@ -52,6 +52,7 @@ pub fn commands() -> Vec<Command> {
                     .about("Encrypt file.")
                     .args([
                         arg!(<PATH>   "File path (e.g. \"/home/user/important/image.png\")."),
+                        arg!(--key    "Use custom key."),
                         arg!(--delete "Delete the origin file.")
                     ]),
                 Command::new("decrypt-file")

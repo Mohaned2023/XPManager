@@ -45,4 +45,12 @@ impl Logger {
         );
         std::process::exit(exit_code as i32);
     }
+
+    pub fn warning(&self, message: &str) {
+        println!(
+            "[{}] - {}",
+            "WARNING".yellow(),
+            message.yellow()
+        );
+    } 
 }
