@@ -86,6 +86,14 @@ pub fn commands() -> Vec<Command> {
                         arg!(--hex        "Hexadecimal."),
                         arg!(--"hex-hash" "Hash using hexadecimal."),
                         arg!(--bin        "Binary.")
+                    ]),
+                Command::new("decode")
+                    .alias("dec")
+                    .about("Decode strings using different techniques.")
+                    .args([
+                        arg!(--xpmv1 "XPManager v1.0 key technique."),
+                        arg!(--hex   "Hexadecimal."),
+                        arg!(--bin   "Binary.")
                     ])
             ]),
         Command::new("backup-manager")

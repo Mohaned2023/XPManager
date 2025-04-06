@@ -3,6 +3,7 @@ pub mod decrypt_file;
 pub mod encrypt_dir;
 pub mod decrypt_dir;
 pub mod encode;
+pub mod decode;
 
 use clap::ArgMatches;
 use fernet::Fernet;
