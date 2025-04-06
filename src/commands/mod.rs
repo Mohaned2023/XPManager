@@ -38,7 +38,10 @@ pub fn commands() -> Vec<Command> {
                     .arg(arg!(<ID> "Password id (e.g. 23).")),
                 Command::new("encrypt")
                     .alias("en")
-                    .about("Encrypt the password manager database."),
+                    .about("Encrypt the password manager database.")
+                    .args([
+                        arg!(--key    "Use custom key.")
+                    ]),
                 Command::new("decrypt")
                     .alias("de")
                     .about("Decrypt the password manager database."),

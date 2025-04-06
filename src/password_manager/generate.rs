@@ -1,4 +1,5 @@
 use super::ArgMatches;
+use super::PMDatabaseEncrption;
 use rand::seq::{IndexedRandom, SliceRandom};
 use crate::errorlib;
 use crate::filelib;
@@ -23,7 +24,7 @@ fn generate(length: u16, sample_type: utilities::PasswordSample ) -> String {
 }
 
 pub fn main(command: &ArgMatches) {
-    let logger = loglib::Logger::new("generate-password");
+    let mut logger = loglib::Logger::new("generate-password");
     match command.get_one::<String>("length") {
         Some(length) => match length.parse::<u16>() {
             Ok(length) => {
@@ -38,21 +39,28 @@ pub fn main(command: &ArgMatches) {
                 logger.info("password generated successfully");
                 if let Some(password_name) = command.get_one::<String>("save") {
                     let pm_db_state = filelib::pm::db_state();
+                    let mut pm_db_encryption = PMDatabaseEncrption::new();
+                    let mut _is_db_decrypted: bool = false;
                     let pm_decrypted_path = filelib::pm::get_decrypted_db_path();
                     if pm_db_state == filelib::FileState::NotFound {
                         filelib::create_file(pm_decrypted_path.clone());
                         dblib::create_passwords_table(pm_decrypted_path.clone());
                     } else if pm_db_state == filelib::FileState::Encrypted {
-                        // TODO: decrypt the db.
-                        // TODO: encrypt the db.
-                        // TODO: secure delete the decrypt db.
-                        todo!("pm database is encrypted!");
+                        logger.warning("database encrypted!");
+                        pm_db_encryption.decrypt();
+                        logger.start();
+                        _is_db_decrypted = true;
+                        logger.info("password manager database decrypted successfully.");
                     }
                     dblib::save_password(
                         pm_decrypted_path,
                         password_name.clone(),
                         _password.clone()
                     );
+                    if _is_db_decrypted {
+                        pm_db_encryption.encrypt();
+                        logger.info("password manager database encrypted successfully.");
+                    }
                 }
                 displaylib::passwords::display_one(_password);
             },

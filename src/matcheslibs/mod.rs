@@ -16,6 +16,8 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("update", command)) =>   password_manager::update::main(command),
                 Some(("count", command)) =>    password_manager::count::main(command),
                 Some(("delete", command)) =>   password_manager::delete::main(command),
+                Some(("encrypt", command)) =>  password_manager::encrypt::main(command),
+                Some(("decrypt", command)) =>  password_manager::decrypt::main(command),
                 _ => logger.error(
                     "Run with 'password-manager --help'",
                     errorlib::ExitErrorCode::UsageError
