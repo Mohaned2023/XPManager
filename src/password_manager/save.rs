@@ -31,7 +31,7 @@ pub fn main(command: &ArgMatches) {
                 _is_db_decrypted = true;
                 logger.info("password manager database decrypted successfully.");
             }
-            dblib::save_password(
+            dblib::pm::save_password(
                 filelib::pm::get_decrypted_db_path(),
                 name.clone(),
                 password

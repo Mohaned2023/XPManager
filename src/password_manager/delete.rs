@@ -24,7 +24,7 @@ pub fn main( command: &ArgMatches ) {
                 _is_db_decrypted = true;
                 logger.info("password manager database decrypted successfully.");
             }
-            let rows = dblib::delete_password(
+            let rows = dblib::pm::delete_password(
                 filelib::pm::get_decrypted_db_path(),
                 id.clone()
             );

@@ -22,7 +22,7 @@ pub fn display_one(password: String) {
     )
 }
 
-pub fn display_many(passwords: Vec<dblib::PasswordInfoForm>, string: String) {
+pub fn display_many(passwords: Vec<dblib::pm::PasswordInfoForm>, string: String) {
     println!();
     for pass in passwords {
         let mut name = pass.name.clone();
@@ -49,7 +49,7 @@ pub fn display_many(passwords: Vec<dblib::PasswordInfoForm>, string: String) {
     println!();
 }
 
-pub fn display_as_table(passwords: Vec<dblib::PasswordInfoForm>) {
+pub fn display_as_table(passwords: Vec<dblib::pm::PasswordInfoForm>) {
     let (width, _) = terminal::size().unwrap_or((80, 0));
     let max_col_width = (width as f32 * 0.7 ) as usize;
     println!(

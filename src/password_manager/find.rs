@@ -25,7 +25,7 @@ pub fn main(command: &ArgMatches) {
                 _is_db_decrypted = true;
                 logger.info("password manager database decrypted successfully.");
             }
-            let passwords = dblib::find_password(
+            let passwords = dblib::pm::find_password(
                 filelib::pm::get_decrypted_db_path(),
                 string.clone()
             );

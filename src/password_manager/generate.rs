@@ -44,7 +44,7 @@ pub fn main(command: &ArgMatches) {
                     let pm_decrypted_path = filelib::pm::get_decrypted_db_path();
                     if pm_db_state == filelib::FileState::NotFound {
                         filelib::create_file(pm_decrypted_path.clone());
-                        dblib::create_passwords_table(pm_decrypted_path.clone());
+                        dblib::pm::create_passwords_table(pm_decrypted_path.clone());
                     } else if pm_db_state == filelib::FileState::Encrypted {
                         logger.warning("database encrypted!");
                         pm_db_encryption.decrypt();
@@ -52,7 +52,7 @@ pub fn main(command: &ArgMatches) {
                         _is_db_decrypted = true;
                         logger.info("password manager database decrypted successfully.");
                     }
-                    dblib::save_password(
+                    dblib::pm::save_password(
                         pm_decrypted_path,
                         password_name.clone(),
                         _password.clone()

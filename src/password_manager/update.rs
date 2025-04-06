@@ -58,7 +58,7 @@ pub fn main(command: &ArgMatches) {
             }
             let pm_db_path = filelib::pm::get_decrypted_db_path();
             if _password.len() > 0 {
-                dblib::update_password(
+                dblib::pm::update_password(
                     pm_db_path.clone(), 
                     id.clone(), 
                     _password
@@ -66,7 +66,7 @@ pub fn main(command: &ArgMatches) {
                 logger.info("password updated successfully.");
             }
             if _name.len() > 0 {
-                dblib::update_password_name(
+                dblib::pm::update_password_name(
                     pm_db_path, 
                     id.clone(), 
                     _name

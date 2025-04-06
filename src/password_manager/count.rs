@@ -22,7 +22,7 @@ pub fn main( _: &ArgMatches ) {
         _is_db_decrypted = true;
         logger.info("password manager database decrypted successfully.");
     }
-    let number_of_passwords = dblib::get_passwords_number(
+    let number_of_passwords = dblib::pm::get_passwords_number(
         filelib::pm::get_decrypted_db_path()
     );
     if _is_db_decrypted {
