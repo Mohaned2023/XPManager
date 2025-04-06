@@ -28,6 +28,7 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("decrypt-file", command)) => encryption_manager::decrypt_file::main(command),
                 Some(("encrypt-dir", command)) => encryption_manager::encrypt_dir::main(command),
                 Some(("decrypt-dir", command)) => encryption_manager::decrypt_dir::main(command),
+                Some(("encode", command)) => encryption_manager::encode::main(command),
                 _ => logger.error(
                     "Run with 'encryption-manager --help'",
                     errorlib::ExitErrorCode::UsageError

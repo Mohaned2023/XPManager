@@ -78,6 +78,15 @@ pub fn commands() -> Vec<Command> {
                         arg!(--delete "Delete the origin directory."),
                         arg!(--xpmv1  "Decrypt XPManager v1.0 directory.")
                     ]),
+                Command::new("encode")
+                    .alias("enc")
+                    .about("Encode strings using different techniques.")
+                    .args([
+                        arg!(--xpmv1      "XPManager v1.0 key technique."),
+                        arg!(--hex        "Hexadecimal."),
+                        arg!(--"hex-hash" "Hash using hexadecimal."),
+                        arg!(--bin        "Binary.")
+                    ])
             ]),
         Command::new("backup-manager")
             .alias("bm")
