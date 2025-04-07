@@ -69,48 +69,53 @@ pub fn decrypt(path: String, key: String) {
                 }
                 return;
             }
-            logger.error("key error!", errorlib::ExitErrorCode::NoDataAvilable);
+            logger.error(
+                "key error!", 
+                errorlib::ExitErrorCode::NoDataAvilable
+            );
         }
     }
-    logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileNotFound);
+    logger.error(
+        "can NOT open the file!", 
+        errorlib::ExitErrorCode::FileNotFound
+    );
 }
 
 pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("decrypt-file");
-    if let Some(path) = command.get_one::<String>("PATH") {
-        let file_state = filelib::get_file_state(path.clone());
-        if file_state == filelib::FileState::NotFound {
-            logger.error(
-                "file NOT exists!",
-                errorlib::ExitErrorCode::FileNotFound
-            );
-        } else if file_state == filelib::FileState::Decrypted {
-            logger.error(
-                "file NOT encrpted!",
-                errorlib::ExitErrorCode::NoDataAvilable
-            );
-        }
-        let key =  utilities::input("Enter your key: ");
-        logger.start();
-        logger.info("decryption in progress....");
-        if *command.get_one::<bool>("xpmv1").unwrap_or(&false) {
-            logger.warning("do not use --xpmv1 with the XPManager v2.0 encryption it will break your file!!");
-            logger.warning("XPManager v1.0 can not handle large files!!");
-            xpmv1_decryption(path.clone(), key);
-        } else {
-            decrypt(path.clone(), key);
-        }
-        logger.info("file decrypted successfully.");
-        dblib::log::register(
-            &format!("file '{}' encrypted", path.clone())
+    let path= command.get_one::<String>("PATH").unwrap();
+    let file_state = filelib::get_file_state(path.clone());
+    if file_state == filelib::FileState::NotFound {
+        logger.error(
+            "file NOT exists!",
+            errorlib::ExitErrorCode::FileNotFound
         );
-        if *command.get_one::<bool>("delete").unwrap_or(&false) {
-            logger.start();
-            filelib::wipe_delete(path.clone());
-            logger.info("file wiped and deleted successfully.");
-            dblib::log::register(
-                &format!("file '{}' wiped", path)
-            );
-        }
+    } else if file_state == filelib::FileState::Decrypted {
+        logger.error(
+            "file NOT encrpted!",
+            errorlib::ExitErrorCode::NoDataAvilable
+        );
+    }
+    let key =  utilities::input("Enter your key: ");
+    logger.start();
+    logger.info("decryption in progress....");
+    if *command.get_one::<bool>("xpmv1").unwrap_or(&false) {
+        logger.warning("do not use --xpmv1 with the XPManager v2.0 encryption it will break your file!!");
+        logger.warning("XPManager v1.0 can not handle large files!!");
+        xpmv1_decryption(path.clone(), key);
+    } else {
+        decrypt(path.clone(), key);
+    }
+    logger.info("file decrypted successfully.");
+    dblib::log::register(
+        &format!("file '{}' encrypted", path.clone())
+    );
+    if *command.get_one::<bool>("delete").unwrap_or(&false) {
+        logger.start();
+        filelib::wipe_delete(path.clone());
+        logger.info("file wiped and deleted successfully.");
+        dblib::log::register(
+            &format!("file '{}' wiped", path)
+        );
     }
 }

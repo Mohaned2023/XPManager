@@ -19,19 +19,27 @@ pub struct LogInfoForamt {
 fn create_log_table(log_db_path: PathBuf) {
     let logger = loglib::Logger::new("create-logs-table");
     if let Ok(conn) = Connection::open(&log_db_path) {
-        if let Err(_) = conn.execute("CREATE TABLE IF NOT EXISTS logs(
-            id INTEGER PRIMARY KEY,
-            log TEXT NOT NULL,
-            create_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )", []) {
+        if let Err(_) = conn.execute("
+            CREATE TABLE IF NOT EXISTS logs(
+                id INTEGER PRIMARY KEY,
+                log TEXT NOT NULL,
+                create_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        ", []) {
             conn.close().unwrap();
             filelib::delete_file(log_db_path);
-            logger.error("can NOT create the logs table!", errorlib::ExitErrorCode::NoDataAvilable);
+            logger.error(
+                "can NOT create the logs table!", 
+                errorlib::ExitErrorCode::NoDataAvilable
+            );
         }
         logger.info("logs table created successfully.");
     } else {
         logger.error(
-            &format!("can NOT create connection with '{}'", log_db_path.display()),
+            &format!(
+                "can NOT create connection with '{}'", 
+                log_db_path.display()
+            ),
             errorlib::ExitErrorCode::DBConnection
         );
     }
@@ -51,11 +59,17 @@ pub fn register(log: &str) {
             if let Err(_) = conn.execute("INSERT INTO logs (log) VALUES (?1)", [log]) {
                 conn.close().unwrap();
                 filelib::delete_file(log_db_path);
-                logger.error("can NOT insert into the logs table!", errorlib::ExitErrorCode::NoDataAvilable);
+                logger.error(
+                    "can NOT insert into the logs table!", 
+                    errorlib::ExitErrorCode::NoDataAvilable
+                );
             }
         } else {
             logger.error(
-                &format!("can NOT create connection with '{}'", log_db_path.display()),
+                &format!(
+                    "can NOT create connection with '{}'", 
+                    log_db_path.display()
+                ),
                 errorlib::ExitErrorCode::DBConnection
             );
         }
@@ -65,10 +79,15 @@ pub fn register(log: &str) {
 pub fn delete_all(log_db_path: PathBuf) -> usize {
     let logger = loglib::Logger::new("delete-all-logs");
     if let Ok(conn) = Connection::open(&log_db_path) {
-        return conn.execute("DELETE FROM logs", []).unwrap_or(0);
+        return conn
+            .execute("DELETE FROM logs", [])
+            .unwrap_or(0);
     } else {
         logger.error(
-            &format!("can NOT create connection with '{}'", log_db_path.display()),
+            &format!(
+                "can NOT create connection with '{}'", 
+                log_db_path.display()
+            ),
             errorlib::ExitErrorCode::DBConnection
         );
     }
@@ -81,7 +100,6 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
             &format!("
                     SELECT id, log, create_at 
                     FROM logs
-                    ORDER BY create_at DESC
                     LIMIT {}
                 ", 
                 length
@@ -91,20 +109,15 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
                     SELECT id, log, create_at 
                     FROM logs
                     WHERE log LIKE '%{}%'
-                    ORDER BY create_at DESC
                 ", 
                 string
             )
         } else {
-            "
-            SELECT id, log, create_at 
-            FROM logs
-            ORDER BY create_at DESC
-            "
+            "SELECT id, log, create_at FROM logs"
         };
         let e = conn.prepare(sql);
         if let Ok(mut stmt) = e {
-            let password = stmt.query_map([], |row| {
+            let password: Result<Vec<LogInfoForamt>, _> = stmt.query_map([], |row| {
                 Ok(
                     LogInfoForamt {
                         id: row.get::<_, u32>(0).unwrap(),
@@ -114,7 +127,7 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
                 )
             })
                 .unwrap()
-                .collect::<Result<Vec<_>, _>>();
+                .collect();
             return password.unwrap();
         }
         logger.error(
@@ -123,7 +136,10 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
         );
     }
     logger.error(
-        &format!("can NOT create connection with '{}'", log_db_path.display()),
+        &format!(
+            "can NOT create connection with '{}'", 
+            log_db_path.display()
+        ),
         errorlib::ExitErrorCode::DBConnection
     );
 }
@@ -141,7 +157,6 @@ pub fn get_logs_by_date(log_db_path: PathBuf, date: (u16, u8, u8)) -> Vec<LogInf
         //      AND strftime('%Y', create_at) = year
         //      AND strftime('%m', create_at) = month
         //      AND strftime('%d', create_at) = day
-        // ORDER BY create_at DESC
         if date.0 > 0 {
             sql += &format!(" AND strftime('%Y', create_at) = '{:04}'", date.0);
         }
@@ -151,8 +166,6 @@ pub fn get_logs_by_date(log_db_path: PathBuf, date: (u16, u8, u8)) -> Vec<LogInf
         if date.2 > 0 {
             sql += &format!(" AND strftime('%d', create_at) = '{:02}'", date.2);
         }
-        // DESC order.
-        sql += "ORDER BY create_at DESC";
         let e = conn.prepare(&sql);
         if let Ok(mut stmt) = e {
             let password = stmt.query_map(
@@ -176,7 +189,10 @@ pub fn get_logs_by_date(log_db_path: PathBuf, date: (u16, u8, u8)) -> Vec<LogInf
         );
     }
     logger.error(
-        &format!("can NOT create connection with '{}'", log_db_path.display()),
+        &format!(
+            "can NOT create connection with '{}'", 
+            log_db_path.display()
+        ),
         errorlib::ExitErrorCode::DBConnection
     );
 }
@@ -192,7 +208,10 @@ pub fn delete_one(log_db_path: PathBuf, id: String) -> usize {
         ).unwrap_or(0);
     } else {
         logger.error(
-            &format!("can NOT create connection with '{}'", log_db_path.display()),
+            &format!(
+                "can NOT create connection with '{}'", 
+                log_db_path.display()
+            ),
             errorlib::ExitErrorCode::DBConnection
         );
     }

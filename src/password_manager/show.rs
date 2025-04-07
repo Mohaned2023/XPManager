@@ -1,10 +1,14 @@
-use super::ArgMatches;
-use super::PMDatabaseEncrption;
-use crate::loglib;
-use crate::filelib;
-use crate::dblib;
-use crate::displaylib;
-use crate::errorlib;
+use super::{
+    ArgMatches,
+    PMDatabaseEncrption
+};
+use crate::{
+    loglib,
+    filelib,
+    dblib,
+    displaylib,
+    errorlib
+};
 
 pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("show-passwords");

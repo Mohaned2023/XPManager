@@ -14,7 +14,10 @@ pub fn get_encrypted_db_path() -> PathBuf {
             format!("XPManager/data/passwords.db.{}", XPM_EXTENSION)
         );
     } else {
-        logger.error("can NOT get the system data directory path!", errorlib::ExitErrorCode::CannotAccessDataDir);
+        logger.error(
+            "can NOT get the system data directory path!",
+            errorlib::ExitErrorCode::CannotAccessDataDir
+        );
     }
 }
 

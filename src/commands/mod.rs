@@ -10,9 +10,9 @@ pub fn commands() -> Vec<Command> {
                     .alias("g")
                     .about("Generate new password.")
                     .args([
-                        arg!(-l --length <LENGTH> "Password length (e.g. 128)."),
-                        arg!(--hex                "Password as hexadecimal."),
-                        arg!(--save      <NAME>   "Save the password (e.g. \"mohaned2023 github\").")
+                        arg!(<LENGTH>      "Password length (e.g. 128)."),
+                        arg!(--hex         "Password as hexadecimal."),
+                        arg!(--save <NAME> "Save the password (e.g. \"mohaned2023 github\").")
                     ]),
                 Command::new("save")
                     .about("Save custom password.")

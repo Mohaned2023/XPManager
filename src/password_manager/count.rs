@@ -1,9 +1,13 @@
-use super::ArgMatches;
-use super::PMDatabaseEncrption;
-use crate::dblib;
-use crate::loglib;
-use crate::filelib;
-use crate::errorlib;
+use super::{
+    ArgMatches,
+    PMDatabaseEncrption
+};
+use crate::{
+    dblib,
+    loglib,
+    filelib,
+    errorlib
+};
 
 pub fn main( _: &ArgMatches ) {
     let mut logger = loglib::Logger::new("count-password");

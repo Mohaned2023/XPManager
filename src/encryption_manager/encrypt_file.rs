@@ -46,36 +46,34 @@ pub fn encrypt(path: String, key: String) -> String {
 
 pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("encrypt-file");
-    if let Some(path) = command.get_one::<String>("PATH") {
-        let file_state = filelib::get_file_state(path.clone());
-        if file_state == filelib::FileState::NotFound {
-            logger.error(
-                "file NOT exists!",
-                errorlib::ExitErrorCode::FileNotFound
-            );
-        }
-        let mut _key = "".to_owned();
-        if *command.get_one::<bool>("key").unwrap_or(&false) {
-            _key = utilities::input("Enter your key: ");
-            logger.start();
-        }
-
-        logger.info("encryption in progress....");
-        let key = encrypt(path.clone(), _key);
-        displaylib::key::display(key);
-        logger.warning("store the key somewhere safe!");
-        logger.warning("if you lose the key, you will not be able to recover the data!");
-        logger.info("file encrypted successfully.");
-        dblib::log::register(
-            &format!("encrypt file at '{}'", path.clone())
+    let path = command.get_one::<String>("PATH").unwrap();
+    let file_state = filelib::get_file_state(path.clone());
+    if file_state == filelib::FileState::NotFound {
+        logger.error(
+            "file NOT exists!",
+            errorlib::ExitErrorCode::FileNotFound
         );
-        if *command.get_one::<bool>("delete").unwrap_or(&false) {
-            logger.start();
-            filelib::wipe_delete(path.clone());
-            logger.info("file wiped and deleted successfully.");
-            dblib::log::register(
-                &format!("file '{}' wiped", path.clone())
-            );
-        }
+    }
+    let mut _key = "".to_owned();
+    if *command.get_one::<bool>("key").unwrap_or(&false) {
+        _key = utilities::input("Enter your key: ");
+        logger.start();
+    }
+    logger.info("encryption in progress....");
+    let key = encrypt(path.clone(), _key);
+    displaylib::key::display(key);
+    logger.warning("store the key somewhere safe!");
+    logger.warning("if you lose the key, you will not be able to recover the data!");
+    logger.info("file encrypted successfully.");
+    dblib::log::register(
+        &format!("encrypt file at '{}'", path.clone())
+    );
+    if *command.get_one::<bool>("delete").unwrap_or(&false) {
+        logger.start();
+        filelib::wipe_delete(path.clone());
+        logger.info("file wiped and deleted successfully.");
+        dblib::log::register(
+            &format!("file '{}' wiped", path.clone())
+        );
     }
 }
