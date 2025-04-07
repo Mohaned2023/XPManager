@@ -9,7 +9,8 @@ use crate::{
     displaylib, 
     filelib, 
     loglib, 
-    utilities
+    utilities,
+    dblib
 };
 
 pub fn main(command: &ArgMatches) {
@@ -43,5 +44,8 @@ pub fn main(command: &ArgMatches) {
         }
         logger.info("directory encrypted successfully.");
         displaylib::key::display(key);
+        dblib::log::register(
+            &format!("directory '{}' encrypted and wiped", path)
+        );
     }
 }

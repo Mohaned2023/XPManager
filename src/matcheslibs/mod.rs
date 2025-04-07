@@ -1,8 +1,11 @@
 use clap::ArgMatches;
-use crate::password_manager;
-use crate::encryption_manager;
-use crate::loglib;
-use crate::errorlib;
+use crate:: {
+    password_manager,
+    encryption_manager,
+    log_manager,
+    loglib,
+    errorlib,
+};
 
 pub fn matches(arg_matches: ArgMatches) {
     let logger = loglib::Logger::new("matches");
@@ -37,7 +40,19 @@ pub fn matches(arg_matches: ArgMatches) {
                     errorlib::ExitErrorCode::UsageError
                 )
             }
-        }
+        },
+        Some(("log-manager", command)) => {
+            match command.subcommand() {
+                Some(("clear", command)) => log_manager::clear::main(command),
+                Some(("show", command)) => log_manager::show::main(command),
+                Some(("find", command)) => log_manager::find::main(command),
+                Some(("delete", command)) => log_manager::delete::main(command),
+                _ => logger.error(
+                    "Run with 'log-manager --help'",
+                    errorlib::ExitErrorCode::UsageError
+                )
+            }
+        },
         _ => logger.error(
             "Run with '--help'",
             errorlib::ExitErrorCode::UsageError

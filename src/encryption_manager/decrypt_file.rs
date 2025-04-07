@@ -8,7 +8,8 @@ use crate::{
     errorlib,
     filelib, 
     loglib,
-    utilities
+    utilities,
+    dblib
 };
 
 pub fn xpmv1_decryption(path: String, key: String) {
@@ -100,11 +101,16 @@ pub fn main(command: &ArgMatches) {
             decrypt(path.clone(), key);
         }
         logger.info("file decrypted successfully.");
-        
+        dblib::log::register(
+            &format!("file '{}' encrypted", path.clone())
+        );
         if *command.get_one::<bool>("delete").unwrap_or(&false) {
             logger.start();
             filelib::wipe_delete(path.clone());
             logger.info("file wiped and deleted successfully.");
+            dblib::log::register(
+                &format!("file '{}' wiped", path)
+            );
         }
     }
 }

@@ -9,7 +9,8 @@ use crate::{
     filelib, 
     loglib,
     displaylib,
-    utilities
+    utilities,
+    dblib
 };
 
 pub fn encrypt(path: String, key: String) -> String {
@@ -65,11 +66,16 @@ pub fn main(command: &ArgMatches) {
         logger.warning("store the key somewhere safe!");
         logger.warning("if you lose the key, you will not be able to recover the data!");
         logger.info("file encrypted successfully.");
-        
+        dblib::log::register(
+            &format!("encrypt file at '{}'", path.clone())
+        );
         if *command.get_one::<bool>("delete").unwrap_or(&false) {
             logger.start();
             filelib::wipe_delete(path.clone());
             logger.info("file wiped and deleted successfully.");
+            dblib::log::register(
+                &format!("file '{}' wiped", path.clone())
+            );
         }
     }
 }

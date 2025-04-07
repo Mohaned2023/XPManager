@@ -128,7 +128,6 @@ pub fn commands() -> Vec<Command> {
                 Command::new("show")
                     .about("Display all/some logs.")
                     .args([
-                        arg!(   --all             "All logs."),
                         arg!(-l --length <NUMBER> "Number of logs (e.g. 20).")
                     ]),
                 Command::new("find")
@@ -144,6 +143,11 @@ pub fn commands() -> Vec<Command> {
                         Command::new("string")
                             .about("Search using string")
                             .arg(arg!(<STRING> "The search string (e.g. \"github\")."))
+                    ]),
+                Command::new("delete")
+                    .about("Delete single log by id.")
+                    .args([
+                        arg!(<ID>   "Log id.")
                     ])
             ]),
     ]

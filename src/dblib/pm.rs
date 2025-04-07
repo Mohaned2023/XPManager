@@ -7,7 +7,8 @@ use super::{
     params,
     Connection,
     PathBuf,
-    Tabled
+    Tabled,
+    log
 };
 
 #[derive(Tabled)]
@@ -38,6 +39,7 @@ pub fn create_passwords_table(password_manager_db_path: PathBuf) {
             logger.error("can NOT create the password table!", errorlib::ExitErrorCode::NoDataAvilable);
         }
         logger.info("passwords table created successfully.");
+        log::register("create passwords table");
     } else {
         logger.error(
             &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
@@ -58,9 +60,9 @@ pub fn save_password(password_manager_db_path: PathBuf, name: String, password: 
         ) {
             logger.error("can NOT save the password!", errorlib::ExitErrorCode::NoDataAvilable);
         }
-        logger.info(
-            &format!("'{}' saved successfully.", name)
-        );
+        let log = format!("'{}' saved successfully.", name);
+        logger.info(&log );
+        log::register(&log);
     } else {
         logger.error(
             &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
@@ -88,6 +90,9 @@ pub fn find_password(password_manager_db_path: PathBuf, string: String) -> Vec<P
             })
                 .unwrap()
                 .collect::<Result<Vec<_>, _>>();
+            log::register(
+                &format!("search for password using '{}'", string)
+            );
             return password.unwrap();
         }
         logger.error(&format!("can NOT create the query! {:?}", e.err()), errorlib::ExitErrorCode::NoDataAvilable);
@@ -105,19 +110,25 @@ pub fn get_passwords(password_manager_db_path: PathBuf) -> Vec<PasswordInfoForm>
 pub fn update_password(password_manager_db_path: PathBuf, id: String, password: String) {
     let logger = loglib::Logger::new("update-password");
     if let Ok(conn) = Connection::open(&password_manager_db_path) {
-        if let Err(_) = conn.execute("
-                UPDATE passwords 
-                SET password = ?1,
-                update_at = CURRENT_TIMESTAMP 
-                WHERE id=?2
-            ",
-            params![password, id]
-        ) {
-            logger.error(
-                "can NOT update the password!", 
-                errorlib::ExitErrorCode::NoDataAvilable
-            );
-        }
+        if let Ok(rows) = conn.execute("
+                    UPDATE passwords 
+                    SET password = ?1,
+                    update_at = CURRENT_TIMESTAMP 
+                    WHERE id=?2
+                ",
+                params![password, id]
+            ) {
+                if rows > 0 {
+                    log::register(
+                        &format!("password with id {} updated", id)
+                    );
+                } else {
+                    logger.error(
+                        &format!("password with id '{}' NOT found!", id), 
+                        errorlib::ExitErrorCode::NoDataAvilable
+                    );
+                }
+            }
     } else {
         logger.error(
             &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
@@ -129,19 +140,25 @@ pub fn update_password(password_manager_db_path: PathBuf, id: String, password: 
 pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name: String) {
     let logger = loglib::Logger::new("update-password");
     if let Ok(conn) = Connection::open(&password_manager_db_path) {
-        if let Err(_) = conn.execute("
-                UPDATE passwords 
-                SET name = ?1,
-                update_at = CURRENT_TIMESTAMP 
-                WHERE id=?2
-            ", 
-            params![name, id]
-        ) {
-            logger.error(
-                "can NOT update the password!", 
-                errorlib::ExitErrorCode::NoDataAvilable
-            );
-        }
+        if let Ok(rows) = conn.execute("
+                    UPDATE passwords 
+                    SET name = ?1,
+                    update_at = CURRENT_TIMESTAMP 
+                    WHERE id=?2
+                ",
+                params![name, id]
+            ) {
+                if rows > 0 {
+                    log::register(
+                        &format!("password with id {} updated", id)
+                    );
+                } else {
+                    logger.error(
+                        &format!("password with id '{}' NOT found!", id), 
+                        errorlib::ExitErrorCode::NoDataAvilable
+                    );
+                }
+            }
     } else {
         logger.error(
             &format!("can NOT create connection with '{}'", password_manager_db_path.display()),
@@ -168,12 +185,16 @@ pub fn get_passwords_number(password_manager_db_path: PathBuf) -> usize {
 pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
     let logger = loglib::Logger::new("dblib");
     if let Ok(conn) = Connection::open(&password_manager_db_path) {
-        return conn.execute("
+        let rows = conn.execute("
                 DELETE FROM passwords 
                 WHERE id=?1
             ",
             params![id]
         ).unwrap_or(0);
+        log::register(
+            &format!("delete passwor with id {}: rows affected {}", id, rows)
+        );
+        return rows;
     } else {
         logger.error(
             &format!("can NOT create connection with '{}'", password_manager_db_path.display()),

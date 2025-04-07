@@ -1,4 +1,5 @@
 pub mod pm;
+pub mod log;
 
 use std::ffi::OsStr;
 use std::path::{PathBuf, Path};
@@ -49,7 +50,7 @@ pub fn create_file(path: PathBuf) {
             );
     }
     logger.info(
-        &format!("create password manager database at '{}'", path.display())
+        &format!("create file at '{}'", path.display())
     );
 }
 

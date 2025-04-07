@@ -1,18 +1,17 @@
-use super::Colorize;
 use crate::dblib;
-use tabled::{
-    settings::{
-        location::ByColumnName, 
-        object::{Columns, Rows}, 
-        Alignment, 
-        Modify, 
-        Remove, 
-        Style, 
-        Width
-    }, 
-    Table
+use super::{
+    Colorize,
+    terminal,
+    Table,
+    Style,
+    Modify,
+    Rows,
+    Alignment,
+    Columns,
+    Width,
+    Remove,
+    ByColumnName
 };
-use crossterm::terminal;
 
 pub fn display_one(password: String) {
     println!(

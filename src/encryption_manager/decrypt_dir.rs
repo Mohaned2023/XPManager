@@ -8,7 +8,8 @@ use crate::{
     displaylib, 
     filelib, 
     loglib, 
-    utilities
+    utilities,
+    dblib
 };
 
 pub fn main(command: &ArgMatches) {
@@ -48,9 +49,15 @@ pub fn main(command: &ArgMatches) {
             logger.info(
                 &format!("decrypted '{}'.", file.display())
             );
+            dblib::log::register(
+                &format!("file '{}' decrypted", path.clone())
+            );
             if is_delete {
                 filelib::wipe_delete(file_path_string.clone());
                 logger.info("file was wiped successfully.");
+                dblib::log::register(
+                    &format!("file '{}' wiped", path.clone())
+                );
             }
         }
         logger.info("directory decrypted successfully.");
