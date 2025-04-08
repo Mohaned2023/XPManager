@@ -37,6 +37,9 @@ pub fn main(command: &ArgMatches) {
             key.clone()
         );
         filelib::wipe_delete(file_path_string.clone());
+        dblib::log::register(
+            &format!("encrypted and wiped '{}'.", file.display())
+        );
         logger.info(
             &format!("encrypted and wiped '{}'.", file.display())
         );

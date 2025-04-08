@@ -50,13 +50,13 @@ pub fn main(command: &ArgMatches) {
             &format!("decrypted '{}'.", file.display())
         );
         dblib::log::register(
-            &format!("file '{}' decrypted", path.clone())
+            &format!("file '{}' decrypted", file.display())
         );
         if is_delete {
             filelib::wipe_delete(file_path_string.clone());
             logger.info("file was wiped successfully.");
             dblib::log::register(
-                &format!("file '{}' wiped", path.clone())
+                &format!("file '{}' wiped", file.display())
             );
         }
     }
