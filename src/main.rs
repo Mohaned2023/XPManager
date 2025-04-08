@@ -3,6 +3,7 @@ use clap::Command;
 mod password_manager;
 mod encryption_manager;
 mod log_manager;
+mod backup_manager;
 mod commands;
 mod matcheslibs;
 mod utilities;

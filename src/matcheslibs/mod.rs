@@ -3,6 +3,7 @@ use crate:: {
     password_manager,
     encryption_manager,
     log_manager,
+    backup_manager,
     loglib,
     errorlib,
 };
@@ -37,6 +38,16 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("decode", command)) => encryption_manager::decode::main(command),
                 _ => logger.error(
                     "Run with 'encryption-manager --help'",
+                    errorlib::ExitErrorCode::UsageError
+                )
+            }
+        },
+        Some(("backup-manager", command)) => {
+            match command.subcommand() {
+                Some(("backup", command)) => backup_manager::backup::main(command),
+                Some(("restore", command)) => backup_manager::restore::main(command),
+                _ => logger.error(
+                    "Run with 'backup-manager --help'",
                     errorlib::ExitErrorCode::UsageError
                 )
             }

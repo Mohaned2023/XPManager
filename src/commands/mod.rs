@@ -101,7 +101,7 @@ pub fn commands() -> Vec<Command> {
             ]),
         Command::new("backup-manager")
             .alias("bm")
-            .about("Create/Restor backup for passwords/logs database.")
+            .about("Create/Restore backup for passwords/logs database.")
             .subcommands([
                 Command::new("backup")
                     .about("Create backup for passwords/logs database.")
@@ -110,11 +110,12 @@ pub fn commands() -> Vec<Command> {
                         arg!(--password "Password manager database."),
                         arg!(--log      "Log manager database.")
                     ]),
-                Command::new("restor")
-                    .about("Restor passwords/logs database.")
+                Command::new("restore")
+                    .about("Restore passwords/logs database.")
                     .args([
-                        arg!(<PATH>            "Restor file path (e.g. \"/home/user/backup/data.x\")."),
+                        arg!(<PATH>            "Restore file path (e.g. \"/home/user/backup/data.x\")."),
                         arg!(--password        "Password manager database."),
+                        arg!(--xpmv1           "XPManager v1.0 database."),
                         arg!(--"password-json" "Password manager JSON file."),
                         arg!(--log             "Log manager database.")
                     ])

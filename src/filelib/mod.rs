@@ -1,12 +1,16 @@
 pub mod pm;
 pub mod log;
 
+use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::path::{PathBuf, Path};
 use std::fs::OpenOptions;
-use std::io::{Seek, SeekFrom, Write};
+use std::io::{
+    BufReader, BufWriter, Read, Seek, SeekFrom, Write
+};
 use dirs::data_dir;
 use rand::Rng;
+use serde_json::Value;
 use crate::{errorlib, loglib};
 
 const XPM_EXTENSION: &str = "x";
@@ -212,4 +216,67 @@ pub fn dir_files_tree(folder_path: PathBuf, files_paths: &mut Vec<PathBuf> ){
             errorlib::ExitErrorCode::NoDataAvilable
         )
     }
+}
+
+pub fn copy(file: String, to_file: String) {
+    let logger = loglib::Logger::new("copy-file");
+    let file_path = PathBuf::new().join(file);
+    if !file_path.exists() || !file_path.is_file() {
+        logger.error(
+            "file NOT found!",
+            errorlib::ExitErrorCode::FileNotFound
+        )
+    }
+    let file_stream = std::fs::File::open(file_path).unwrap();
+    if let Ok(to_file)= std::fs::File::create(to_file) {
+        let mut reader = BufReader::new(file_stream);
+        let mut writer = BufWriter::new(to_file);
+        let mut buffer = vec![0; 64 * 1024]; // 64KB
+        loop {
+            let bytes_read = reader.read(&mut buffer).unwrap();
+            if bytes_read == 0 {
+                break;
+            }
+            writer.write_all(&buffer[..bytes_read]).unwrap();
+        }
+        writer.flush().unwrap();
+    } else {
+        logger.error(
+            "directory NOT found!",
+            errorlib::ExitErrorCode::NoDataAvilable
+        )
+    }
+}
+
+pub fn read_json(file: String) -> HashMap<String, String> {
+    let logger = loglib::Logger::new("read-json");
+    let json_path = PathBuf::new().join(file);
+    let mut contents = String::new();
+    if let Ok(mut json_file) = std::fs::File::open(json_path) {
+        json_file.read_to_string(&mut contents).unwrap();
+    }
+    if let Ok(json) = serde_json::from_str(&contents) {
+        if let Value::Object(map) = json {
+            let data: HashMap<String, String> = map.into_iter()
+                .filter_map(|(key, value)| {
+                    if let Value::String(val) = value {
+                        Some((key, val))
+                    } else {
+                        logger.error(
+                            "invalid json file!",
+                            errorlib::ExitErrorCode::NoDataAvilable
+                        )
+                    }
+                }).collect();
+            return data;
+        }
+        logger.error(
+            "expected a JSON object!", 
+            errorlib::ExitErrorCode::UsageError
+        )
+    }
+    logger.error(
+        "can not get the json data!", 
+        errorlib::ExitErrorCode::NoDataAvilable
+    )
 }
