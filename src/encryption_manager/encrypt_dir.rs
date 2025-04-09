@@ -1,4 +1,6 @@
 
+use colored::Colorize;
+
 use super::{
     ArgMatches,
     PathBuf,
@@ -30,6 +32,15 @@ pub fn main(command: &ArgMatches) {
         &mut files_paths
     );
     logger.info("directory listed successfully.");
+    logger.warning(
+        &format!(
+            "you are about to encrypt and {} all files in this directory '{}'", 
+            "delete".red(),
+            path.clone()
+        )
+    );
+    utilities::confirm();
+    logger.start();
     for file in files_paths {
         let file_path_string = file.to_str().unwrap().to_owned();
         encrypt_file::encrypt(

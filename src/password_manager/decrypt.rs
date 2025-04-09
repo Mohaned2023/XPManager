@@ -6,7 +6,8 @@ use super::{
 use crate::{
     loglib,
     filelib,
-    errorlib
+    errorlib,
+    utilities
 };
 
 pub fn main(_: &ArgMatches) {
@@ -17,11 +18,19 @@ pub fn main(_: &ArgMatches) {
             "no database, try to save some passwords!", 
             errorlib::ExitErrorCode::FileNotFound
         );
+    } else if pm_db_state == filelib::FileState::Decrypted {
+        logger.error(
+            "database not encrypted!", 
+            errorlib::ExitErrorCode::FileNotFound
+        );
     }
+    
+    logger.warning("your passwords will be at risk if you decrypt the database!");
+    utilities::confirm();
+    logger.start();
     let mut pm_db_encryption = PMDatabaseEncrption::new();
     pm_db_encryption.decrypt();
     logger.start();
-    logger.warning("your passwords will be at risk!");
     logger.warning("after you complet your work please encrypt your database!!");
     logger.info("database decrypted successfully.");
 }
