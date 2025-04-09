@@ -8,23 +8,23 @@ pub fn commands() -> Vec<Command> {
             .subcommands([
                 Command::new("generate")
                     .alias("g")
-                    .about("Generate new password.")
+                    .about("Generate new password as ASCII/HEX.")
                     .args([
                         arg!(<LENGTH>      "Password length (e.g. 128)."),
                         arg!(--hex         "Password as hexadecimal."),
                         arg!(--save <NAME> "Save the password (e.g. \"mohaned2023 github\").")
                     ]),
                 Command::new("save")
-                    .about("Save custom password.")
+                    .about("Save custom password in the database.")
                     .arg(arg!(<NAME> "Password name (e.g. \"mohaned2023 github\").")),
                 Command::new("find")
-                    .about("Search for password.")
+                    .about("Search for password in the database.")
                     .arg(arg!(<STRING> "String in the password name (e.g. \"github\").")),
                 Command::new("show")
-                    .about("Display the passwords.")
+                    .about("Display all passwords in the database.")
                     .arg(arg!(-t --table "Show as table.")),
                 Command::new("count")
-                    .about("Get the number of pasword you saved."),
+                    .about("Get the number of passwords you saved in the database."),
                 Command::new("update")
                     .alias("up")
                     .about("Update the password information.")
@@ -34,7 +34,7 @@ pub fn commands() -> Vec<Command> {
                         arg!(-p --password "Update the password.")
                     ]),
                 Command::new("delete")
-                    .about("Delete the password you saved.")
+                    .about("Delete specific password from the database.")
                     .arg(arg!(<ID> "Password id (e.g. 23).")),
                 Command::new("encrypt")
                     .alias("en")
@@ -48,7 +48,7 @@ pub fn commands() -> Vec<Command> {
             ]),
         Command::new("encryption-manager")
             .alias("em")
-            .about("Encrypt/Decrypt file and folder.")
+            .about("Encrypt/Decrypt file and folder and encode/decode strings.")
             .subcommands([
                 Command::new("encrypt-file")
                     .alias("enf")
@@ -68,7 +68,7 @@ pub fn commands() -> Vec<Command> {
                     ]),
                 Command::new("encrypt-dir")
                     .alias("end")
-                    .about("Encrypt directory.")
+                    .about("Encrypt directory while deleting all files inside it.")
                     .args([
                         arg!(<PATH>   "Directory path (e.g. \"/home/user/important\")."),
                         arg!(--key    "Use custom key.")
@@ -106,7 +106,7 @@ pub fn commands() -> Vec<Command> {
                 Command::new("backup")
                     .about("Create backup for passwords/logs database.")
                     .args([
-                        arg!(<PATH>     "Backup save path (e.g. \"/home/user/backup\")."),
+                        arg!(<PATH>     "The directory you want to save to (e.g. \"/home/user/backup\")."),
                         arg!(--password "Password manager database."),
                         arg!(--log      "Log manager database.")
                     ]),
@@ -116,13 +116,13 @@ pub fn commands() -> Vec<Command> {
                         arg!(<PATH>            "Restore file path (e.g. \"/home/user/backup/data.x\")."),
                         arg!(--password        "Password manager database."),
                         arg!(--xpmv1           "XPManager v1.0 database."),
-                        arg!(--"password-json" "Password manager JSON file."),
+                        arg!(--"password-json" "Restore from a custom JSON file."),
                         arg!(--log             "Log manager database.")
                     ])
             ]),
         Command::new("log-manager")
             .alias("lm")
-            .about("Show, find, delete, or clear xpm logs")
+            .about("Show, find, delete, or clear xpm logs.")
             .subcommands([
                 Command::new("clear")
                     .about("Clear all logs."),
