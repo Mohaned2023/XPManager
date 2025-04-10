@@ -123,28 +123,23 @@ pub fn get_passwords(password_manager_db_path: PathBuf) -> Vec<PasswordInfoForm>
     find_password(password_manager_db_path, "".to_owned())
 }
 
-pub fn update_password(password_manager_db_path: PathBuf, id: String, password: String) {
+pub fn update_password(password_manager_db_path: PathBuf, id: String, password: String) -> usize {
     let logger = loglib::Logger::new("update-password");
     if let Ok(conn) = Connection::open(&password_manager_db_path) {
-        if let Ok(rows) = conn.execute("
+        let rows = conn.execute("
                     UPDATE passwords 
                     SET password = ?1,
                     update_at = CURRENT_TIMESTAMP 
                     WHERE id=?2
                 ",
                 params![password, id]
-            ) {
-                if rows > 0 {
-                    log::register(
-                        &format!("password with id {} updated", id)
-                    );
-                } else {
-                    logger.error(
-                        &format!("password with id '{}' NOT found!", id), 
-                        errorlib::ExitErrorCode::NoDataAvilable
-                    );
-                }
+            ).unwrap_or(0);
+            if rows > 0 {
+                log::register(
+                    &format!("password with id {} updated", id)
+                );
             }
+            return rows;
     } else {
         logger.error(
             &format!(
@@ -156,28 +151,23 @@ pub fn update_password(password_manager_db_path: PathBuf, id: String, password: 
     }
 }
 
-pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name: String) {
+pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name: String) -> usize {
     let logger = loglib::Logger::new("update-password");
     if let Ok(conn) = Connection::open(&password_manager_db_path) {
-        if let Ok(rows) = conn.execute("
+        let rows= conn.execute("
                     UPDATE passwords 
                     SET name = ?1,
                     update_at = CURRENT_TIMESTAMP 
                     WHERE id=?2
                 ",
                 params![name, id]
-            ) {
-                if rows > 0 {
-                    log::register(
-                        &format!("password with id {} updated", id)
-                    );
-                } else {
-                    logger.error(
-                        &format!("password with id '{}' NOT found!", id), 
-                        errorlib::ExitErrorCode::NoDataAvilable
-                    );
-                }
+            ).unwrap_or(0);
+            if rows > 0 {
+                log::register(
+                    &format!("password with id {} updated", id)
+                );
             }
+            return rows;
     } else {
         logger.error(
             &format!(

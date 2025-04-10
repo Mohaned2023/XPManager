@@ -61,20 +61,24 @@ pub fn main(command: &ArgMatches) {
     }
     let pm_db_path = filelib::pm::get_decrypted_db_path();
     if _password.len() > 0 {
-        dblib::pm::update_password(
+        let rows = dblib::pm::update_password(
             pm_db_path.clone(), 
             id.clone(), 
             _password
         );
-        logger.info("password updated successfully.");
+        logger.info(
+            &format!("there is {} password updated successfully.", rows)
+        );
     }
     if _name.len() > 0 {
-        dblib::pm::update_password_name(
+        let rows = dblib::pm::update_password_name(
             pm_db_path, 
             id.clone(), 
             _name
         );
-        logger.info("name update successfully.");
+        logger.info(
+            &format!("there is {} password name update successfully.", rows)
+        );
     }
     if _is_db_decrypted {
         pm_db_encryption.encrypt();
