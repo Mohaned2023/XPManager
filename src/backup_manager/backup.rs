@@ -75,11 +75,20 @@ fn logs_manager(path: String) {
 }
 
 pub fn main(command: &ArgMatches) {
+    let logger = loglib::Logger::new("backup");
     let path = command.get_one::<String>("PATH").unwrap();
-    if *command.get_one("password").unwrap_or(&false) {
+    let is_password = *command.get_one("password").unwrap_or(&false);
+    let is_log = *command.get_one("log").unwrap_or(&false);
+    if  is_password {
         password_manager(path.clone());
     }
-    if *command.get_one("log").unwrap_or(&false) {
+    if is_log {
         logs_manager(path.clone());
+    }
+    if !is_password && !is_log {
+        logger.error(
+            "Run with 'backup-manager backup --help'",
+            errorlib::ExitErrorCode::UsageError
+        )
     }
 }
