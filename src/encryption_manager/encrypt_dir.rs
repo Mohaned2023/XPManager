@@ -18,6 +18,7 @@ use crate::{
 pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("encrypt-dir");
     let path = command.get_one::<String>("PATH").unwrap();
+    let is_delete = *command.get_one::<bool>("delete").unwrap_or(&false);
     let mut files_paths: Vec<PathBuf> = vec![];
     let key = if *command.get_one::<bool>("key")
         .unwrap_or(&false) {
@@ -32,27 +33,49 @@ pub fn main(command: &ArgMatches) {
         &mut files_paths
     );
     logger.info("directory listed successfully.");
-    logger.warning(
-        &format!(
-            "you are about to encrypt and {} all files in this directory '{}'", 
-            "delete".red(),
-            path.clone()
-        )
-    );
+    if is_delete {
+        logger.warning(
+            &format!(
+                "you are about to encrypt and {} all files in this directory '{}'",
+                "delete".red(),
+                path.clone()
+            )
+        );
+    } else {
+        logger.warning(
+            &format!(
+                "you are about to encrypt all files in this directory '{}'",
+                path.clone()
+            )
+        );
+    }
     utilities::confirm();
     logger.start();
     for file in files_paths {
         let file_path_string = file.to_str().unwrap().to_owned();
+        if filelib::get_file_state(
+            file_path_string.clone()
+        ) == filelib::FileState::Encrypted {
+            logger.warning(
+                &format!("file already encrypted '{}'?", file_path_string)
+            );
+            continue;
+        }
         encrypt_file::encrypt(
             file_path_string.clone(),
             key.clone()
         );
-        filelib::wipe_delete(file_path_string.clone());
+        if is_delete {
+            filelib::wipe_delete(file_path_string.clone());
+            logger.info(
+                &format!("wiped '{}'.", file.display())
+            );
+        }
         dblib::log::register(
-            &format!("encrypted and wiped '{}'.", file.display())
+            &format!("encrypted '{}'.", file.display())
         );
         logger.info(
-            &format!("encrypted and wiped '{}'.", file.display())
+            &format!("encrypted '{}'.", file.display())
         );
     }
     logger.info("directory encrypted successfully.");

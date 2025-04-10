@@ -84,6 +84,11 @@ fn wipe_file(path: String, wipe_type: WipeType) {
         .open(path) {
         if let Ok(metadata) = file.metadata() {
             let len = metadata.len();
+            if len == 0 {
+                // File len is 0, file is empty,
+                // we can not wipe an empty file.
+                return;
+            }
             let mut size: usize = 64*1024; // 64KB.
             size = if len < size as u64 {
                 // if the size of the file is less than 64KB.

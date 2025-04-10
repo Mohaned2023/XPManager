@@ -1,4 +1,4 @@
-
+use colored::Colorize;
 use super::{
     decrypt_file, 
     ArgMatches,
@@ -24,6 +24,17 @@ pub fn main(command: &ArgMatches) {
         PathBuf::new().join(path), 
         &mut files_paths
     );
+    if is_delete {
+        logger.warning(
+            &format!(
+                "you are about to decrypt and {} all encryption files in this directory '{}'",
+                "delete".red(),
+                path.clone()
+            )
+        );
+        utilities::confirm();
+        logger.start();
+    }
     logger.info("directory listed successfully.");
     for file in files_paths {
         let file_path_string = file.to_str().unwrap().to_owned();
