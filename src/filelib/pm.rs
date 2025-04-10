@@ -41,3 +41,11 @@ pub fn db_state() -> FileState {
     }
     return FileState::NotFound;
 }
+
+pub fn warning_encrypt_database() {
+    let logger = loglib::Logger::new("check-password-manager-database");
+    if db_state() == FileState::Decrypted {
+        logger.warning("password manager database found NOT encrypted!!");
+        logger.warning("please use 'password-manager encrypt' to encrypt it!");
+    }
+}

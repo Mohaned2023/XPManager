@@ -21,4 +21,5 @@ fn main() {
         .subcommands(commands::commands())
         .get_matches();
     matcheslibs::matches(matches);
+    filelib::pm::warning_encrypt_database();
 }
