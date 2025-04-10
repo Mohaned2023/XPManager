@@ -47,6 +47,7 @@ pub fn encrypt(path: String, key: String) -> String {
 pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("encrypt-file");
     let path = command.get_one::<String>("PATH").unwrap();
+    let is_key = *command.get_one::<bool>("key").unwrap_or(&false);
     let file_state = filelib::get_file_state(path.clone());
     if file_state == filelib::FileState::NotFound {
         logger.error(
@@ -55,15 +56,17 @@ pub fn main(command: &ArgMatches) {
         );
     }
     let mut _key = "".to_owned();
-    if *command.get_one::<bool>("key").unwrap_or(&false) {
+    if is_key {
         _key = utilities::input("Enter your key: ");
         logger.start();
     }
     logger.info("encryption in progress....");
     let key = encrypt(path.clone(), _key);
-    displaylib::key::display(key);
-    logger.warning("store the key somewhere safe!");
-    logger.warning("if you lose the key, you will not be able to recover the data!");
+    if is_key {
+        displaylib::key::display(key);
+        logger.warning("store the key somewhere safe!");
+        logger.warning("if you lose the key, you will not be able to recover the data!");
+    }
     logger.info("file encrypted successfully.");
     dblib::log::register(
         &format!("encrypt file at '{}'", path.clone())
