@@ -47,11 +47,11 @@ pub fn xpmv1_decryption(path: String, key: String) {
 
 pub fn decrypt(path: String, key: String) {
     let logger = loglib::Logger::new("decrypt-file");
-    if let Ok(mut en_file) = std::fs::File::open(&path) {
-        if let Ok(mut de_file) = std::fs::File::create(
-            filelib::make_decrypt_path(path)
-        ) {
-            if let Some(fernet) = Fernet::new(&key) {
+    if let Some(fernet) = Fernet::new(&key) {
+        if let Ok(mut en_file) = std::fs::File::open(&path) {
+            if let Ok(mut de_file) = std::fs::File::create(
+                filelib::make_decrypt_path(path)
+            ) {
                 let mut size_buf = [0u8; 4];
                 loop {
                     if en_file.read_exact(&mut size_buf).is_err() {
@@ -69,16 +69,17 @@ pub fn decrypt(path: String, key: String) {
                 }
                 return;
             }
-            logger.error(
-                "key error!", 
-                errorlib::ExitErrorCode::NoDataAvilable
-            );
         }
+        logger.error(
+            "can NOT open the file!", 
+            errorlib::ExitErrorCode::FileNotFound
+        );
+    } else {
+        logger.error(
+            "key error!", 
+            errorlib::ExitErrorCode::NoDataAvilable
+        );
     }
-    logger.error(
-        "can NOT open the file!", 
-        errorlib::ExitErrorCode::FileNotFound
-    );
 }
 
 pub fn main(command: &ArgMatches) {

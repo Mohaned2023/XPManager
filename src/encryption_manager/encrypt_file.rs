@@ -15,16 +15,16 @@ use crate::{
 
 pub fn encrypt(path: String, key: String) -> String {
     let logger = loglib::Logger::new("encrypt-file");
-    if let Ok(mut de_file) = std::fs::File::open(&path) {
-        if let Ok(mut en_file) = std::fs::File::create(
-            filelib::make_encrypt_path(path)
-        ) {
-            let key = if key.len() < 1 {
-                Fernet::generate_key()
-            } else {
-                key
-            };
-            if let Some(fernet) = Fernet::new(&key) {
+    let key = if key.len() < 1 {
+        Fernet::generate_key()
+    } else {
+        key
+    };
+    if let Some(fernet) = Fernet::new(&key) {
+        if let Ok(mut de_file) = std::fs::File::open(&path) {
+            if let Ok(mut en_file) = std::fs::File::create(
+                filelib::make_encrypt_path(path)
+            ) {
                 let mut buffer = vec![0u8;  64*1024]; // 64KB buffer.
                 loop {
                     let bytes_read = de_file.read(&mut buffer).unwrap();
@@ -38,10 +38,10 @@ pub fn encrypt(path: String, key: String) -> String {
                 }
                 return key;
             }
-            logger.error("key error!", errorlib::ExitErrorCode::NoDataAvilable);
         }
+        logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileNotFound);
     }
-    logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileNotFound);
+    logger.error("key error!", errorlib::ExitErrorCode::NoDataAvilable);
 }
 
 pub fn main(command: &ArgMatches) {
@@ -62,7 +62,7 @@ pub fn main(command: &ArgMatches) {
     }
     logger.info("encryption in progress....");
     let key = encrypt(path.clone(), _key);
-    if is_key {
+    if !is_key {
         displaylib::key::display(key);
         logger.warning("store the key somewhere safe!");
         logger.warning("if you lose the key, you will not be able to recover the data!");
