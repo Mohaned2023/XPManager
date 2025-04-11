@@ -1,7 +1,23 @@
 [package]
 name = "XPManager"
-version = "0.1.0"
-edition = "2024"
+version = "2.0.0"
+edition = "2021"
+description = "XPManager is a CLI tool specialized in dealing with passwords management and file encryption/decryption."
+authors = ["Mohaned Sherhan"]
+license = "MIT"
+repository = "https://github.com/Mohaned2023/XPManager"
+documentation = "https://github.com/Mohaned2023/XPManager"
+homepage = "https://github.com/Mohaned2023/XPManager"
+
+[[bin]]
+name = "xpm"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+opt-level = "s"
+lto = true
+codegen-units = 1
 
 [dependencies]
 chrono = "0.4.40"
