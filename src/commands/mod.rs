@@ -68,7 +68,7 @@ pub fn commands() -> Vec<Command> {
                     ]),
                 Command::new("encrypt-dir")
                     .alias("end")
-                    .about("Encrypt directory while deleting all files inside it.")
+                    .about("Encrypt directory.")
                     .args([
                         arg!(<PATH>   "Directory path (e.g. \"/home/user/important\")."),
                         arg!(--delete "Delete the origin files in the directory."),
