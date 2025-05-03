@@ -100,6 +100,7 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
             &format!("
                     SELECT id, log, create_at 
                     FROM logs
+                    ORDER BY create_at DESC, id DESC
                     LIMIT {}
                 ", 
                 length
