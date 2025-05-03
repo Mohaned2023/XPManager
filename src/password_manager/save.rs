@@ -17,7 +17,7 @@ pub fn main(command: &ArgMatches) {
     if password.len() < 1 {
         logger.error(
             "password must be at least one character long!",
-            errorlib::ExitErrorCode::Usage
+            errorlib::ExitErrorCode::Input
         );
     }
     let pm_db_state = filelib::pm::db_state();

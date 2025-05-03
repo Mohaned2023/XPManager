@@ -22,7 +22,7 @@ pub fn main(command: &ArgMatches) {
         if _name.len() < 1 {
             logger.error(
                 "name must be at least one letter long!",
-                errorlib::ExitErrorCode::Usage
+                errorlib::ExitErrorCode::Input
             );
         }
         _is_choose = true;
@@ -33,7 +33,7 @@ pub fn main(command: &ArgMatches) {
         if _password.len() < 1 {
             logger.error(
                 "password must be at least one character long!",
-                errorlib::ExitErrorCode::Usage
+                errorlib::ExitErrorCode::Input
             );
         }
         _is_choose = true;

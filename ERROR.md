@@ -9,36 +9,36 @@ In XManager we provide exit codes to facilitate error tracking and make integrat
 
 | name                                              | Exit Code | Description                                                         |
 |---------------------------------------------------|-----------|---------------------------------------------------------------------|
-| [FileNotFound](#filenotfound)                     | 2         | The file you will be working on does not exist.                     |
-| [FileCreate](#filecreate)                         | 3         | Can not create the file.                                            |
-| [FileOpen](#fileopen)                             | 4         | Can not open the file.                                              |
-| [FileRead](#fileread)                             | 5         | Can not read the file.                                              |
-| [FileWrite](#filewrite)                           | 6         | Can not write to the file.                                          |
-| [FileSeek](#fileseek)                             | 8         | Can not move the file pointer.                                      |
-| [FileFlush](#fileflush)                           | 9         | Can not flush the file to the disk.                                 |
-| [FileDelete](#filedelete)                         | 10        | Can not delete the file.                                            |
-| [FileAlreadyEncrypted](#filealreadyencrypted)     | 11        | The file you will be working on is already encrypted.               |
-| [FileNotEncrypted](#filenotencrypted)             | 12        | The file you will be working on is not encrypted.                   |
-| [DirNotFound](#dirnotfound)                       | 20        | The directory you will be working on does not exist.                |
-| [DirCreate](#dircreate)                           | 21        | Can not create the directory.                                       |
-| [DirUnsupported](#dirunsupported)                 | 22        | Can not process the directory because it is not supported.          |
-| [CanNotGetDirData](#cannotgetdirdata)             | 23        | Can not get the directory data.                                     |
-| [SystemDataDirNotFound](#systemdatadirnotfound)   | 24        | Can not find the system data directory.                             |
-| [CanNotGetFileOrDirType](#cannotgetfileordirtype) | 25        | The type could not be determined whether it is file or directory.   |
-| [CanNotGetJsonObject](#cannotgetjsonobject)       | 30        | Can not map the json object to Value type in serde_json.            |
-| [InvalidJson](#invalidjson)                       | 31        | The json value is invalid.                                          |
-| [InvalidKey](#invalidkey)                         | 35        | Invalid encryption or decryption key.                               |
-| [InvalidEncryptionData](#invalidencryptiondata)   | 36        | Encryption data can not be decrypted.                               |
-| [DBConnection](#dbconnection)                     | 40        | Can not connect the SQLite database file.                           |
-| [DBInsert](#dbinsert)                             | 41        | Can not insert to the database file.                                |
-| [DBCreateTable](#dbcreatetable)                   | 42        | Can not create the database table.                                  |
-| [PMDatabaseNotFound](#pmdatabasenotfound)         | 43        | Password manager database file not found.                           |
-| [PMDatabaseEmpty](#pmdatabaseempty)               | 44        | Password manager database is empty.                                 |
-| [LMDatabaseNotFound](#lmdatabasenotfound)         | 45        | Log manager database file not found.                                |
-| [LogNotFound](#lognotfound)                       | 46        | Not found log in the database.                                      |
-| [Usage](#usage)                                   | 55        | Input error.                                                        |
-| [MissingArg](#missingarg)                         | 56        | Missing some args.                                                  |
-| [ConfirmationNotMatch](#confirmationnotmatch)     | 57        | The confirmation code not match.                                    |
+| [FileNotFound](#filenotfound)                     | 50        | The file you will be working on does not exist.                     |
+| [FileCreate](#filecreate)                         | 51        | Can not create the file.                                            |
+| [FileOpen](#fileopen)                             | 52        | Can not open the file.                                              |
+| [FileRead](#fileread)                             | 53        | Can not read the file.                                              |
+| [FileWrite](#filewrite)                           | 54        | Can not write to the file.                                          |
+| [FileSeek](#fileseek)                             | 55        | Can not move the file pointer.                                      |
+| [FileFlush](#fileflush)                           | 56        | Can not flush the file to the disk.                                 |
+| [FileDelete](#filedelete)                         | 57        | Can not delete the file.                                            |
+| [FileAlreadyEncrypted](#filealreadyencrypted)     | 58        | The file you will be working on is already encrypted.               |
+| [FileNotEncrypted](#filenotencrypted)             | 59        | The file you will be working on is not encrypted.                   |
+| [DirNotFound](#dirnotfound)                       | 65        | The directory you will be working on does not exist.                |
+| [DirCreate](#dircreate)                           | 66        | Can not create the directory.                                       |
+| [DirUnsupported](#dirunsupported)                 | 67        | Can not process the directory because it is not supported.          |
+| [CanNotGetDirData](#cannotgetdirdata)             | 68        | Can not get the directory data.                                     |
+| [SystemDataDirNotFound](#systemdatadirnotfound)   | 69        | Can not find the system data directory.                             |
+| [CanNotGetFileOrDirType](#cannotgetfileordirtype) | 70        | The type could not be determined whether it is file or directory.   |
+| [CanNotGetJsonObject](#cannotgetjsonobject)       | 75        | Can not map the json object to Value type in serde_json.            |
+| [InvalidJson](#invalidjson)                       | 76        | The json value is invalid.                                          |
+| [InvalidKey](#invalidkey)                         | 80        | Invalid encryption or decryption key.                               |
+| [InvalidEncryptionData](#invalidencryptiondata)   | 81        | Encryption data can not be decrypted.                               |
+| [DBConnection](#dbconnection)                     | 85        | Can not connect the SQLite database file.                           |
+| [DBInsert](#dbinsert)                             | 86        | Can not insert to the database file.                                |
+| [DBCreateTable](#dbcreatetable)                   | 87        | Can not create the database table.                                  |
+| [PMDatabaseNotFound](#pmdatabasenotfound)         | 89        | Password manager database file not found.                           |
+| [PMDatabaseEmpty](#pmdatabaseempty)               | 90        | Password manager database is empty.                                 |
+| [LMDatabaseNotFound](#lmdatabasenotfound)         | 91        | Log manager database file not found.                                |
+| [LogNotFound](#lognotfound)                       | 92        | Not found log in the database.                                      |
+| [Input](#input)                                   | 95        | Error input.                                                        |
+| [MissingArg](#missingarg)                         | 96        | Missing some args.                                                  |
+| [ConfirmationNotMatch](#confirmationnotmatch)     | 97        | The confirmation code not match.                                    |
 
 
 ## Where:
@@ -122,7 +122,7 @@ In XManager we provide exit codes to facilitate error tracking and make integrat
 - log manager - show.
 #### LogNotFound
 - log manager - find.
-#### Usage
+#### Input
 - backup manager - restore.
 - encryption manager - decrypt file.
 - encryption manager - encrypt file.

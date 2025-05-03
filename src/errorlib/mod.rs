@@ -1,44 +1,44 @@
 
 pub enum ExitErrorCode {
     // File
-    FileNotFound           = 2,
-    FileCreate             = 3,
-    FileOpen               = 4,
-    FileRead               = 5,
-    FileWrite              = 6,
-    FileSeek               = 8,
-    FileFlush              = 9,
-    FileDelete             = 10,
-    FileAlreadyEncrypted   = 11,
-    FileNotEncrypted       = 12,
+    FileNotFound           = 50,
+    FileCreate             = 51,
+    FileOpen               = 52,
+    FileRead               = 53,
+    FileWrite              = 54,
+    FileSeek               = 55,
+    FileFlush              = 56,
+    FileDelete             = 57,
+    FileAlreadyEncrypted   = 58,
+    FileNotEncrypted       = 59,
 
     // Dir
-    DirNotFound            = 20,
-    DirCreate              = 21,
-    DirUnsupported         = 22,
-    CanNotGetDirData       = 23,
-    SystemDataDirNotFound  = 24,
-    CanNotGetFileOrDirType = 25,
+    DirNotFound            = 65,
+    DirCreate              = 66,
+    DirUnsupported         = 67,
+    CanNotGetDirData       = 68,
+    SystemDataDirNotFound  = 69,
+    CanNotGetFileOrDirType = 70,
 
     // JSON
-    CanNotGetJsonObject    = 30,
-    InvalidJson            = 31,
+    CanNotGetJsonObject    = 75,
+    InvalidJson            = 76,
 
     // Encryption and Decryption
-    InvalidKey             = 35,
-    InvalidEncryptionData  = 36,
+    InvalidKey             = 80,
+    InvalidEncryptionData  = 81,
 
     // Database
-    DBConnection           = 40,
-    DBInsert               = 41,
-    DBCreateTable          = 42,
-    PMDatabaseNotFound     = 43,
-    PMDatabaseEmpty        = 44,
-    LMDatabaseNotFound     = 45,
-    LogNotFound            = 46,
+    DBConnection           = 85,
+    DBInsert               = 86,
+    DBCreateTable          = 87,
+    PMDatabaseNotFound     = 89,
+    PMDatabaseEmpty        = 90,
+    LMDatabaseNotFound     = 91,
+    LogNotFound            = 92,
 
     // Others
-    Usage                  = 55,
-    MissingArg             = 56,
-    ConfirmationNotMatch   = 57,
+    Input                  = 95,
+    MissingArg             = 96,
+    ConfirmationNotMatch   = 97,
 }

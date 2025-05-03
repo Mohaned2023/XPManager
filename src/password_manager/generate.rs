@@ -39,7 +39,7 @@ pub fn main(command: &ArgMatches) {
     if length.is_err() {
         logger.error(
             &format!("<LENGTH> must be unsigned integer from 0 to {}!", u16::MAX),
-            errorlib::ExitErrorCode::Usage
+            errorlib::ExitErrorCode::Input
         )
     }
     let mut _password: String = generate(
