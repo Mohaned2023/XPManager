@@ -72,7 +72,7 @@ pub fn main(command: &ArgMatches) {
     if file_state == filelib::FileState::Encrypted && (is_logs || is_password_json) {
         logger.error(
             "can not restore --password-json or --log when the file is encrypted!", 
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::Usage
         )
     }  else if file_state == filelib::FileState::NotFound {
         logger.error(
@@ -94,7 +94,7 @@ pub fn main(command: &ArgMatches) {
             if file_state == filelib::FileState::Decrypted {
                 logger.error(
                     "if your password manager v1.0 database is not encrypted use --password-json !!", 
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::Usage
                 )
             }
             decrypt_file::xpmv1_decryption(
@@ -150,7 +150,7 @@ pub fn main(command: &ArgMatches) {
     } else {
         logger.error(
             "Run with 'backup-manager restore --help'",
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::MissingArg
         )
     }
 }

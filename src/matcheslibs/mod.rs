@@ -24,7 +24,7 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("decrypt", command)) =>  password_manager::decrypt::main(command),
                 _ => logger.error(
                     "Run with 'password-manager --help'",
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::MissingArg
                 )
             }
         },
@@ -38,7 +38,7 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("decode", command)) => encryption_manager::decode::main(command),
                 _ => logger.error(
                     "Run with 'encryption-manager --help'",
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::MissingArg
                 )
             }
         },
@@ -48,7 +48,7 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("restore", command)) => backup_manager::restore::main(command),
                 _ => logger.error(
                     "Run with 'backup-manager --help'",
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::MissingArg
                 )
             }
         },
@@ -60,13 +60,13 @@ pub fn matches(arg_matches: ArgMatches) {
                 Some(("delete", command)) => log_manager::delete::main(command),
                 _ => logger.error(
                     "Run with 'log-manager --help'",
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::MissingArg
                 )
             }
         },
         _ => logger.error(
             "Run with '--help'",
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::MissingArg
         )
     }
 }

@@ -16,7 +16,7 @@ pub fn main( _: &ArgMatches ) {
             .to_owned()
     );
     if log_db_state == filelib::FileState::NotFound {
-        logger.error("no logs database!", errorlib::ExitErrorCode::FileNotFound);
+        logger.error("no logs database!", errorlib::ExitErrorCode::LMDatabaseNotFound);
     }
     logger.warning("clear all logs!");
     let rows = dblib::log::delete_all(log_db_path);

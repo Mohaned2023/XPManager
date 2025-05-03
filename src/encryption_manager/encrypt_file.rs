@@ -39,9 +39,9 @@ pub fn encrypt(path: String, key: String) -> String {
                 return key;
             }
         }
-        logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileNotFound);
+        logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileOpen);
     }
-    logger.error("key error!", errorlib::ExitErrorCode::NoDataAvilable);
+    logger.error("key error!", errorlib::ExitErrorCode::InvalidKey);
 }
 
 pub fn main(command: &ArgMatches) {

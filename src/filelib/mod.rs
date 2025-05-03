@@ -42,7 +42,7 @@ pub fn create_file(path: PathBuf) {
             if let Err(_) = std::fs::create_dir_all(parent) {
                 logger.error(
                     &format!("can NOT create the directory at '{}'!", parent.display()),
-                    errorlib::ExitErrorCode::CannotCreateDir
+                    errorlib::ExitErrorCode::DirCreate
                 );
             }
         }
@@ -50,7 +50,7 @@ pub fn create_file(path: PathBuf) {
     if let Err(_) = std::fs::File::create(&path) {
         logger.error(
             &format!("can NOT create the file at '{}'!", path.display()),
-                errorlib::ExitErrorCode::CannotCreateFile
+                errorlib::ExitErrorCode::FileCreate
             );
     }
     logger.info(
@@ -64,7 +64,7 @@ pub fn delete_file(path: PathBuf) {
         if let Err(_) = std::fs::remove_file(&path) {
             logger.error(
                 &format!("can NOT delete the file at '{}'!", path.display()),
-                errorlib::ExitErrorCode::CanNotDeleteFile
+                errorlib::ExitErrorCode::FileDelete
             );
         }
     }
@@ -76,7 +76,7 @@ fn wipe_file(path: String, wipe_type: WipeType) {
     if !path.exists() || !path.is_file() {
         logger.error(
             "file NOT found!", 
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::FileNotFound
         );
     }
     if let Ok(mut file) = OpenOptions::new()
@@ -119,13 +119,13 @@ fn wipe_file(path: String, wipe_type: WipeType) {
                 if let Err(_) = file.seek(SeekFrom::Start(pos)) {
                     logger.error(
                         "can NOT seek the file!", 
-                        errorlib::ExitErrorCode::NoDataAvilable
+                        errorlib::ExitErrorCode::FileSeek
                     );
                 }
                 if let Err(_) = file.write_all(&data) {
                     logger.error(
                         "can NOT write to the file!", 
-                        errorlib::ExitErrorCode::NoDataAvilable
+                        errorlib::ExitErrorCode::FileWrite
                     );
                 }
                 pos += size as u64;
@@ -133,7 +133,7 @@ fn wipe_file(path: String, wipe_type: WipeType) {
             if let Err(_) = file.flush() {
                 logger.error(
                     "can NOT flush the file to the disk!", 
-                    errorlib::ExitErrorCode::NoDataAvilable
+                    errorlib::ExitErrorCode::FileFlush
                 );
             }
         }
@@ -184,7 +184,7 @@ pub fn dir_files_tree(folder_path: PathBuf, files_paths: &mut Vec<PathBuf> ){
     if !folder_path.exists() {
         logger.error(
             "can NOT find the directory!", 
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::DirNotFound
         );
     }
     if let Ok(paths) = folder_path.read_dir() {
@@ -199,26 +199,26 @@ pub fn dir_files_tree(folder_path: PathBuf, files_paths: &mut Vec<PathBuf> ){
                     } else {
                         logger.error(
                             &format!("unsupported directory at '{}'!", entry_path.display()),
-                            errorlib::ExitErrorCode::NoDataAvilable
+                            errorlib::ExitErrorCode::DirUnsupported
                         )
                     }
                 } else {
                     logger.error(
                         "can NOT get the file/folder type!", 
-                        errorlib::ExitErrorCode::NoDataAvilable
+                        errorlib::ExitErrorCode::CanNotGetFileOrDirType
                     )
                 }
             } else {
                 logger.error(
                     "can NOT get the folder entry!", 
-                    errorlib::ExitErrorCode::NoDataAvilable
+                    errorlib::ExitErrorCode::CanNotGetDirData
                 )
             }
         }
     } else {
         logger.error(
             "can NOT get the folder data!", 
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::CanNotGetDirData
         )
     }
 }
@@ -248,7 +248,7 @@ pub fn copy(file: String, to_file: String) {
     } else {
         logger.error(
             "directory NOT found!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::DirNotFound
         )
     }
 }
@@ -269,19 +269,15 @@ pub fn read_json(file: String) -> HashMap<String, String> {
                     } else {
                         logger.error(
                             "invalid json file!",
-                            errorlib::ExitErrorCode::NoDataAvilable
+                            errorlib::ExitErrorCode::InvalidJson
                         )
                     }
                 }).collect();
             return data;
         }
-        logger.error(
-            "expected a JSON object!", 
-            errorlib::ExitErrorCode::UsageError
-        )
     }
     logger.error(
         "can not get the json data!", 
-        errorlib::ExitErrorCode::NoDataAvilable
+        errorlib::ExitErrorCode::CanNotGetJsonObject
     )
 }

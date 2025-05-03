@@ -16,12 +16,12 @@ pub fn main(_: &ArgMatches) {
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "no database, try to save some passwords!", 
-            errorlib::ExitErrorCode::FileNotFound
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     } else if pm_db_state == filelib::FileState::Decrypted {
         logger.error(
             "database not encrypted!", 
-            errorlib::ExitErrorCode::FileNotFound
+            errorlib::ExitErrorCode::FileNotEncrypted
         );
     }
     

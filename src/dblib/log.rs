@@ -30,7 +30,7 @@ fn create_log_table(log_db_path: PathBuf) {
             filelib::delete_file(log_db_path);
             logger.error(
                 "can NOT create the logs table!", 
-                errorlib::ExitErrorCode::NoDataAvilable
+                errorlib::ExitErrorCode::DBCreateTable
             );
         }
         logger.info("logs table created successfully.");
@@ -61,7 +61,7 @@ pub fn register(log: &str) {
                 filelib::delete_file(log_db_path);
                 logger.error(
                     "can NOT insert into the logs table!", 
-                    errorlib::ExitErrorCode::NoDataAvilable
+                    errorlib::ExitErrorCode::DBInsert
                 );
             }
         } else {
@@ -130,10 +130,6 @@ pub fn get_logs(log_db_path: PathBuf, length: u16, string: String) -> Vec<LogInf
                 .collect();
             return password.unwrap();
         }
-        logger.error(
-            "can NOT create the query!", 
-            errorlib::ExitErrorCode::NoDataAvilable
-        );
     }
     logger.error(
         &format!(
@@ -183,10 +179,6 @@ pub fn get_logs_by_date(log_db_path: PathBuf, date: (u16, u8, u8)) -> Vec<LogInf
                 .collect::<Result<Vec<_>, _>>();
             return password.unwrap();
         }
-        logger.error(
-            "can NOT create the query!", 
-            errorlib::ExitErrorCode::NoDataAvilable
-        );
     }
     logger.error(
         &format!(

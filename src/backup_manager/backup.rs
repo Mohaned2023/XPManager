@@ -14,12 +14,12 @@ fn password_manager(path: String) {
     if pm_db_state == filelib::FileState::Decrypted {
         logger.error(
             "password manager found decrypted!, please encrypt it and try to backup!", 
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::FileNotEncrypted
         );
     } else if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "password manager found empty!, please save some password and try to backup!", 
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     }
     let encryption_db_path = filelib::pm::get_encrypted_db_path();
@@ -54,7 +54,7 @@ fn logs_manager(path: String) {
     if log_db_state == filelib::FileState::NotFound {
         logger.error(
             "logs manager found empty!", 
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::LMDatabaseNotFound
         );
     }
     filelib::copy(
@@ -88,7 +88,7 @@ pub fn main(command: &ArgMatches) {
     if !is_password && !is_log {
         logger.error(
             "Run with 'backup-manager backup --help'",
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::MissingArg
         )
     }
 }

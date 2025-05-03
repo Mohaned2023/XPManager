@@ -20,7 +20,7 @@ pub fn main( command: &ArgMatches ) {
         .unwrap_or(&"0".to_owned())
         .parse::<u16>();
     if log_db_state == filelib::FileState::NotFound {
-        logger.error("no logs database!", errorlib::ExitErrorCode::FileNotFound);
+        logger.error("no logs database!", errorlib::ExitErrorCode::LMDatabaseNotFound);
     }
     displaylib::log::display(
         dblib::log::get_logs(

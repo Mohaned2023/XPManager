@@ -18,7 +18,7 @@ pub fn main( command: &ArgMatches ) {
             .to_owned()
     );
     if log_db_state == filelib::FileState::NotFound {
-        logger.error("no logs database!", errorlib::ExitErrorCode::FileNotFound);
+        logger.error("no logs database!", errorlib::ExitErrorCode::LMDatabaseNotFound);
     }
     match command.subcommand() {
         Some(("string", command)) => {
@@ -55,7 +55,7 @@ pub fn main( command: &ArgMatches ) {
             if logs.len() < 1 {
                 logger.error(
                     "no logs found!", 
-                    errorlib::ExitErrorCode::NoDataAvilable
+                    errorlib::ExitErrorCode::LogNotFound
                 )
             }
             displaylib::log::display( logs );

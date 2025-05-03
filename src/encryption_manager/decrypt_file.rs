@@ -26,7 +26,7 @@ pub fn xpmv1_decryption(path: String, key: String) {
                 if en_file.read_to_string(&mut en_data).is_err() {
                     logger.error(
                         "can NOT read the file!",
-                        errorlib::ExitErrorCode::NoDataAvilable
+                        errorlib::ExitErrorCode::FileRead
                     )
                 }
                 if let Ok(de_data) = fernet.decrypt(&en_data) {
@@ -35,14 +35,14 @@ pub fn xpmv1_decryption(path: String, key: String) {
                 } else {
                     logger.error(
                         "it's look likes your encryption data is a broken!",
-                        errorlib::ExitErrorCode::NoDataAvilable
+                        errorlib::ExitErrorCode::InvalidEncryptionData
                     )
                 }
             }
-            logger.error("key error!", errorlib::ExitErrorCode::NoDataAvilable);
+            logger.error("key error!", errorlib::ExitErrorCode::InvalidKey);
         }
     }
-    logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileNotFound);
+    logger.error("can NOT open the file!", errorlib::ExitErrorCode::FileOpen);
 }
 
 pub fn decrypt(path: String, key: String) {
@@ -72,12 +72,12 @@ pub fn decrypt(path: String, key: String) {
         }
         logger.error(
             "can NOT open the file!", 
-            errorlib::ExitErrorCode::FileNotFound
+            errorlib::ExitErrorCode::FileOpen
         );
     } else {
         logger.error(
             "key error!", 
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::InvalidKey
         );
     }
 }
@@ -94,7 +94,7 @@ pub fn main(command: &ArgMatches) {
     } else if file_state == filelib::FileState::Decrypted {
         logger.error(
             "file NOT encrpted!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::FileNotEncrypted
         );
     }
     let key =  utilities::input("Enter your key: ");

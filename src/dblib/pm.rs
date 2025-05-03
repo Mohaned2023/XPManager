@@ -40,7 +40,7 @@ pub fn create_passwords_table(password_manager_db_path: PathBuf) {
             filelib::delete_file(password_manager_db_path);
             logger.error(
                 "can NOT create the password table!", 
-                errorlib::ExitErrorCode::NoDataAvilable
+                errorlib::ExitErrorCode::DBCreateTable
             );
         }
         logger.info("passwords table created successfully.");
@@ -68,7 +68,7 @@ pub fn save_password(password_manager_db_path: PathBuf, name: String, password: 
         ) {
             logger.error(
                 "can NOT save the password!", 
-                errorlib::ExitErrorCode::NoDataAvilable
+                errorlib::ExitErrorCode::DBInsert
             );
         }
         let log = format!("'{}' saved successfully.", name);
@@ -105,10 +105,6 @@ pub fn find_password(password_manager_db_path: PathBuf, string: String) -> Vec<P
                 .collect();
             return password.unwrap();
         }
-        logger.error(
-            "can NOT create the query!", 
-            errorlib::ExitErrorCode::NoDataAvilable
-        );
     }
     logger.error(
         &format!(

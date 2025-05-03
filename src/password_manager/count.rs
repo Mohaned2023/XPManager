@@ -17,7 +17,7 @@ pub fn main( _: &ArgMatches ) {
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "password manager database is empty!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
         logger.warning("database is encrypted!");

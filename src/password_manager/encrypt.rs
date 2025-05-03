@@ -17,12 +17,12 @@ pub fn main(command: &ArgMatches) {
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "no database, try to save some passwords and then encrypt it!", 
-            errorlib::ExitErrorCode::FileNotFound
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
         logger.error(
             "database is already encrypted!", 
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::FileAlreadyEncrypted
         );
     }
     let mut pm_db_encryption = PMDatabaseEncrption::new();

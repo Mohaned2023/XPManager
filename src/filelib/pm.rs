@@ -16,7 +16,7 @@ pub fn get_encrypted_db_path() -> PathBuf {
     } else {
         logger.error(
             "can NOT get the system data directory path!",
-            errorlib::ExitErrorCode::CannotAccessDataDir
+            errorlib::ExitErrorCode::SystemDataDirNotFound
         );
     }
 }
@@ -28,7 +28,7 @@ pub fn get_decrypted_db_path() -> PathBuf {
     } else {
         logger.error(
             "can NOT get the system data directory path!", 
-            errorlib::ExitErrorCode::CannotAccessDataDir
+            errorlib::ExitErrorCode::SystemDataDirNotFound
         );
     }
 }

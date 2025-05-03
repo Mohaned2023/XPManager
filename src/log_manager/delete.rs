@@ -19,7 +19,7 @@ pub fn main( command: &ArgMatches ) {
         if log_db_state == filelib::FileState::NotFound {
             logger.error(
                 "no logs database!", 
-                errorlib::ExitErrorCode::FileNotFound
+                errorlib::ExitErrorCode::LMDatabaseNotFound
             );
         }
         let rows = dblib::log::delete_one(log_db_path, id.clone());

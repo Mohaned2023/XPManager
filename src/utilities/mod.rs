@@ -59,7 +59,7 @@ pub fn confirm() {
     if value != confirmation {
         logger.error(
             "This process stopped, confirmation error",
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::ConfirmationNotMatch
         )
     }
     logger.info("confirmation completed successfully.");

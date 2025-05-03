@@ -18,7 +18,7 @@ pub fn main(command: &ArgMatches) {
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "password manager database is empty!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
         logger.warning("database is encrypted!");
@@ -37,7 +37,7 @@ pub fn main(command: &ArgMatches) {
     if passwords.len() < 1 {
         logger.error(
             "password manager database is empty!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::PMDatabaseEmpty
         );
     }
     if *command.get_one::<bool>("table").unwrap_or(&false) {

@@ -22,7 +22,7 @@ pub fn main(command: &ArgMatches) {
         if _name.len() < 1 {
             logger.error(
                 "name must be at least one letter long!",
-                errorlib::ExitErrorCode::UsageError
+                errorlib::ExitErrorCode::Usage
             );
         }
         _is_choose = true;
@@ -33,7 +33,7 @@ pub fn main(command: &ArgMatches) {
         if _password.len() < 1 {
             logger.error(
                 "password must be at least one character long!",
-                errorlib::ExitErrorCode::UsageError
+                errorlib::ExitErrorCode::Usage
             );
         }
         _is_choose = true;
@@ -41,7 +41,7 @@ pub fn main(command: &ArgMatches) {
     if !_is_choose {
         logger.error(
             "Run with 'password-manager update --help'",
-            errorlib::ExitErrorCode::UsageError
+            errorlib::ExitErrorCode::MissingArg
         )
     }
     let pm_db_state = filelib::pm::db_state();
@@ -50,7 +50,7 @@ pub fn main(command: &ArgMatches) {
     if pm_db_state == filelib::FileState::NotFound {
         logger.error(
             "password manager database is empty!",
-            errorlib::ExitErrorCode::NoDataAvilable
+            errorlib::ExitErrorCode::PMDatabaseNotFound
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
         logger.warning("database is encrypted!");

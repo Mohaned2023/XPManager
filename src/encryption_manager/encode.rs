@@ -60,14 +60,14 @@ pub fn main(command: &ArgMatches) {
             if constant > 9999u16 || constant < 1000u16 {
                 logger.error(
                     "constant must be in range (1000 <= x <= 9999)!",
-                    errorlib::ExitErrorCode::UsageError
+                    errorlib::ExitErrorCode::Usage
                 )
             }
             _encoded_date = xpmv1(string.clone(), constant);
         } else {
             logger.error(
                 "constant must be string!",
-                errorlib::ExitErrorCode::UsageError
+                errorlib::ExitErrorCode::Usage
             )
         }
     } else if *command.get_one::<bool>("bin").unwrap_or(&false) {
