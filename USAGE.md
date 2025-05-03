@@ -563,7 +563,7 @@ $ xpm lm show
 ###     │  2  │ encrypt file at '~/myfolder/passwords.db'           │ 2025-04-10 07:06:06 │
 ###     │  3  │ file '~/myfolder/passwords.db' encrypted            │ 2025-04-10 07:06:31 │
 ###     │  4  │ password with id 2 updated                          │ 2025-04-10 10:59:58 │
-###     │  5  │ delete passwor with id 3: rows affected 1           │ 2025-04-10 11:07:30 │
+###     │  5  │ delete password with id 3: rows affected 1          │ 2025-04-10 11:07:30 │
 ###     ╰─────┴─────────────────────────────────────────────────────┴─────────────────────╯
 
 ## show some logs

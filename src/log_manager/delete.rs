@@ -24,7 +24,7 @@ pub fn main( command: &ArgMatches ) {
         }
         let rows = dblib::log::delete_one(log_db_path, id.clone());
         logger.info(
-            &format!("deleted {} from the database.", rows)
+            &format!("deleted {} log from the database.", rows)
         );
     }
 }

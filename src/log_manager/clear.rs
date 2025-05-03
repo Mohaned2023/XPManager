@@ -21,6 +21,6 @@ pub fn main( _: &ArgMatches ) {
     logger.warning("clear all logs!");
     let rows = dblib::log::delete_all(log_db_path);
     logger.info(
-        &format!("clear {} from the database.", rows)
+        &format!("clear {} log from the database.", rows)
     );
 }

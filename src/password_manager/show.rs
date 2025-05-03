@@ -21,7 +21,7 @@ pub fn main(command: &ArgMatches) {
             errorlib::ExitErrorCode::NoDataAvilable
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
-        logger.warning("database encrypted!");
+        logger.warning("database is encrypted!");
         pm_db_encryption.decrypt();
         logger.start();
         _is_db_decrypted = true;

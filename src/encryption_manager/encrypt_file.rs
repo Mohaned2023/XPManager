@@ -51,7 +51,7 @@ pub fn main(command: &ArgMatches) {
     let file_state = filelib::get_file_state(path.clone());
     if file_state == filelib::FileState::NotFound {
         logger.error(
-            "file NOT exists!",
+            "file NOT found!",
             errorlib::ExitErrorCode::FileNotFound
         );
     }

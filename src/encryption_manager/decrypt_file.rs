@@ -13,7 +13,7 @@ use crate::{
 };
 
 pub fn xpmv1_decryption(path: String, key: String) {
-    // In the XPManager we dose not use buffer to read
+    // In the XPManager v1.0 we dose not use buffer to read
     // from the file, So the encryption/decryption 
     // will be different.
     let logger = loglib::Logger::new("xpmv1-decryption");
@@ -88,7 +88,7 @@ pub fn main(command: &ArgMatches) {
     let file_state = filelib::get_file_state(path.clone());
     if file_state == filelib::FileState::NotFound {
         logger.error(
-            "file NOT exists!",
+            "file NOT found!",
             errorlib::ExitErrorCode::FileNotFound
         );
     } else if file_state == filelib::FileState::Decrypted {

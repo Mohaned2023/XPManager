@@ -20,7 +20,7 @@ pub fn main( _: &ArgMatches ) {
             errorlib::ExitErrorCode::NoDataAvilable
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
-        logger.warning("database encrypted!");
+        logger.warning("database is encrypted!");
         pm_db_encryption.decrypt();
         logger.start();
         _is_db_decrypted = true;
@@ -34,6 +34,6 @@ pub fn main( _: &ArgMatches ) {
         logger.info("password manager database encrypted successfully.");
     }
     logger.info(
-        &format!("there is {} in the database.", number_of_passwords)
+        &format!("there is {} password in the database.", number_of_passwords)
     );
 }

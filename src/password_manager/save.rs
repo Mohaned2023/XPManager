@@ -16,7 +16,7 @@ pub fn main(command: &ArgMatches) {
     let password: String = utilities::input("Enter the password: ");
     if password.len() < 1 {
         logger.error(
-            "password must be at least one letter long!",
+            "password must be at least one character long!",
             errorlib::ExitErrorCode::UsageError
         );
     }
@@ -28,7 +28,7 @@ pub fn main(command: &ArgMatches) {
             filelib::pm::get_decrypted_db_path()
         );
     } else if pm_db_state == filelib::FileState::Encrypted {
-        logger.warning("database encrypted!");
+        logger.warning("database is encrypted!");
         pm_db_encryption.decrypt();
         logger.start();
         _is_db_decrypted = true;

@@ -25,12 +25,12 @@ pub fn main(_: &ArgMatches) {
         );
     }
     
-    logger.warning("your passwords will be at risk if you decrypt the database!");
+    logger.warning("your passwords will be at risk if you decrypt the database!!");
     utilities::confirm();
     logger.start();
     let mut pm_db_encryption = PMDatabaseEncrption::new();
     pm_db_encryption.decrypt();
     logger.start();
-    logger.warning("after you complet your work please encrypt your database!!");
-    logger.info("database decrypted successfully.");
+    logger.warning("after you complete your work please encrypt your database!!");
+    logger.info("password manager database decrypted successfully.");
 }

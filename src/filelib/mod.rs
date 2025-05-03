@@ -41,7 +41,7 @@ pub fn create_file(path: PathBuf) {
         if !parent.exists() {
             if let Err(_) = std::fs::create_dir_all(parent) {
                 logger.error(
-                    &format!("can NOT create directory at '{}'!", parent.display()),
+                    &format!("can NOT create the directory at '{}'!", parent.display()),
                     errorlib::ExitErrorCode::CannotCreateDir
                 );
             }
@@ -49,7 +49,7 @@ pub fn create_file(path: PathBuf) {
     }
     if let Err(_) = std::fs::File::create(&path) {
         logger.error(
-            &format!("can NOT create the at '{}'!", path.display()),
+            &format!("can NOT create the file at '{}'!", path.display()),
                 errorlib::ExitErrorCode::CannotCreateFile
             );
     }
@@ -63,7 +63,7 @@ pub fn delete_file(path: PathBuf) {
     if path.exists() {
         if let Err(_) = std::fs::remove_file(&path) {
             logger.error(
-                &format!("can NOT delete file at '{}'!", path.display()),
+                &format!("can NOT delete the file at '{}'!", path.display()),
                 errorlib::ExitErrorCode::CanNotDeleteFile
             );
         }
@@ -75,7 +75,7 @@ fn wipe_file(path: String, wipe_type: WipeType) {
     let path = Path::new(&path);
     if !path.exists() || !path.is_file() {
         logger.error(
-            "file not found!", 
+            "file NOT found!", 
             errorlib::ExitErrorCode::NoDataAvilable
         );
     }
@@ -183,7 +183,7 @@ pub fn dir_files_tree(folder_path: PathBuf, files_paths: &mut Vec<PathBuf> ){
     let logger = loglib::Logger::new("dir-files-tree");
     if !folder_path.exists() {
         logger.error(
-            "can NOT find the dir!", 
+            "can NOT find the directory!", 
             errorlib::ExitErrorCode::NoDataAvilable
         );
     }

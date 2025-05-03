@@ -58,7 +58,7 @@ pub fn confirm() {
     logger.start();
     if value != confirmation {
         logger.error(
-            "This process stoped, confirmation error",
+            "This process stopped, confirmation error",
             errorlib::ExitErrorCode::UsageError
         )
     }

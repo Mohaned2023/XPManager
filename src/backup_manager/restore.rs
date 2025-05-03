@@ -81,7 +81,7 @@ pub fn main(command: &ArgMatches) {
         )
     }
 
-    // Ensure secute encryption and decryption in password manager database.
+    // Ensure secure encryption and decryption in password manager database.
     if is_password || is_xpmv1 || is_password_json {
         let mut _hash_map_data: HashMap<String, String> = HashMap::new();
         let pm_db_path = filelib::pm::get_decrypted_db_path();
@@ -129,7 +129,7 @@ pub fn main(command: &ArgMatches) {
             );
             dblib::pm::create_passwords_table(pm_db_path.clone());
         } else if pm_db_state == filelib::FileState::Encrypted {
-            logger.warning("database encrypted!");
+            logger.warning("database is encrypted!");
             pm_db_encryption.decrypt();
             logger.start();
             _is_pm_db_decrypted = true;

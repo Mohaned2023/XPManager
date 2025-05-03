@@ -207,7 +207,7 @@ pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
             params![id]
         ).unwrap_or(0);
         log::register(
-            &format!("delete passwor with id {}: rows affected {}", id, rows)
+            &format!("delete password with id {}: rows affected {}", id, rows)
         );
         return rows;
     } else {

@@ -50,7 +50,7 @@ pub fn main(command: &ArgMatches) {
             utilities::PasswordSample::Ascii
         }
     );
-    logger.info("password generated successfully");
+    logger.info("password generated successfully.");
     if let Some(password_name) = command.get_one::<String>("save") {
         let pm_db_state = filelib::pm::db_state();
         let mut pm_db_encryption = PMDatabaseEncrption::new();
@@ -60,7 +60,7 @@ pub fn main(command: &ArgMatches) {
             filelib::create_file(pm_decrypted_path.clone());
             dblib::pm::create_passwords_table(pm_decrypted_path.clone());
         } else if pm_db_state == filelib::FileState::Encrypted {
-            logger.warning("database encrypted!");
+            logger.warning("database is encrypted!");
             pm_db_encryption.decrypt();
             logger.start();
             _is_db_decrypted = true;
