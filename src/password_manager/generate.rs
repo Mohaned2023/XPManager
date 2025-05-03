@@ -34,7 +34,7 @@ pub fn main(command: &ArgMatches) {
     let mut logger = loglib::Logger::new("generate-password");
     let length = command
         .get_one::<String>("LENGTH")
-        .unwrap()
+        .unwrap_or(&utilities::get_ran_string_number())
         .parse::<u16>();
     if length.is_err() {
         logger.error(

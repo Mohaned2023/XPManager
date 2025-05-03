@@ -4,7 +4,7 @@ use crate::{
     loglib
 };
 use colored::Colorize;
-use rand::seq::IndexedRandom;
+use rand::seq::{IndexedRandom, IteratorRandom};
 
 #[derive(PartialEq)]
 pub enum PasswordSample {
@@ -26,6 +26,15 @@ pub fn get_sample(sample: PasswordSample) -> Vec<char> {
         .chain('A'..='F')
         .collect()
     }
+}
+
+pub fn get_ran_string_number() -> String {
+    let mut rag = rand::rng();
+    // Choose random length between 32 to 72.
+    return (32..=72)
+        .choose(&mut rag)
+        .unwrap()
+        .to_string();
 }
 
 pub fn input(message: &str) -> String {
