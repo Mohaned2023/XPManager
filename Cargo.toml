@@ -1,12 +1,12 @@
 [package]
 name = "XPManager"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2021"
 description = "XPManager is a CLI tool specialized in dealing with passwords management and file encryption/decryption."
 authors = ["Mohaned Sherhan"]
 license = "MIT"
 repository = "https://github.com/Mohaned2023/XPManager"
-documentation = "https://github.com/Mohaned2023/XPManager"
+documentation = "https://github.com/Mohaned2023/XPManager/blob/master/USAGE.md"
 homepage = "https://github.com/Mohaned2023/XPManager"
 
 [[bin]]
@@ -31,3 +31,13 @@ rusqlite = { version = "0.34.0", features = ["bundled"] }
 serde = "1.0.219"
 serde_json = "1.0.140"
 tabled = "0.18.0"
+
+[package.metadata.deb]
+maintainer = "Mohaned Sherhan"
+copyright = "2025, Mohaned Sherhan"
+license-file = ["LICENSE"]
+extended-description = """XPManager is a CLI tool specialized in dealing with passwords management and file encryption/decryption."""
+depends = "$auto"
+assets = [
+    ["target/release/xpm", "usr/local/bin/", "755"],
+]
