@@ -33,6 +33,12 @@ Generate new password as ASCII/HEX.
 ```sh
 # NOTE: password does NOT contain space.
 
+# generate password with random length between 32 to 72 character as ASCII
+$ xpm password-manager|pm generate|g 
+# generate password with random length between 32 to 72 character as HEX
+$ xpm password-manager|pm generate|g --hex
+# generate and save password with random length between 32 to 72 character as ASCII
+$ xpm password-manager|pm generate|g --save <NAME>
 # generate password in ASCII
 $ xpm password-manager|pm generate|g <LENGTH>
 # generate password in HEX
@@ -42,6 +48,15 @@ $ xpm password-manager|pm generate|g <LENGTH> --save <NAME>
 
 
 # Exapmle:
+## random length detween 32 to 72 character in ASCII
+$ xpm pm g
+
+## random length detween 32 to 72 character in HEX
+$ xpm pm g --hex
+
+## random length detween 32 to 72 character in ASCII with save
+$ xpm pm g --save "github acount"
+
 ## 33 character in ASCII
 $ xpm pm g 33
 
@@ -549,7 +564,7 @@ Display all/some logs.
 ```sh
 # show all logs
 $ xpm log-manager|lm show
-# show some logs
+# show the last number of logs in descending order
 $ xpm log-manager|lm show --length|-l <LENGTH>
 
 # Example:
@@ -566,13 +581,17 @@ $ xpm lm show
 ###     │  5  │ delete password with id 3: rows affected 1          │ 2025-04-10 11:07:30 │
 ###     ╰─────┴─────────────────────────────────────────────────────┴─────────────────────╯
 
-## show some logs
-$ xpm lm show -l 2
+# show the last number of logs in descending order
+$ xpm lm show -l 4
+## It will show the last 4 logs in descending order.
+## OUTPUT:
 ###     ╭─────┬─────────────────────────────────────────────────────┬─────────────────────╮
 ###     │ id  │                        log                          │      create_at      │
 ###     ├─────┼─────────────────────────────────────────────────────┼─────────────────────┤
-###     │  1  │ file '~/myfolder/passwords.db' wiped                │ 2025-04-10 06:38:18 │
+###     │  4  │ password with id 2 updated                          │ 2025-04-10 10:59:58 │
+###     │  3  │ file '~/myfolder/passwords.db' encrypted            │ 2025-04-10 07:06:31 │
 ###     │  2  │ encrypt file at '~/myfolder/passwords.db'           │ 2025-04-10 07:06:06 │
+###     │  1  │ file '~/myfolder/passwords.db' wiped                │ 2025-04-10 06:38:18 │
 ###     ╰─────┴─────────────────────────────────────────────────────┴─────────────────────╯
 ```
 
