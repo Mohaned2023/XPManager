@@ -4,7 +4,7 @@ It's good to have a CLI tool that manages your passwords and lets you control th
 ## v2.1.0, What's New?
 - Fix: Correct spelling errors and improve text clarity.
 - New: Refactor exit codes, see [exit codes](./ERROR.md).
-- New: Set password manager generate lingth as optional, see [generate length](./USAGE.md#generate).
+- New: Set password manager generate length as optional, see [generate length](./USAGE.md#generate).
 - Fix: Show logs with length in descending order, see [show with length](./USAGE.md#show-1).
 
 ## Installation Instructions:
