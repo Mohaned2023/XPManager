@@ -78,3 +78,21 @@ pub fn main(command: &ArgMatches) {
     }
     displaylib::passwords::display_one(_password);
 }
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn generate_password() {
+        let mut password = super::generate(
+            512, 
+            super::utilities::PasswordSample::Ascii
+        );
+        assert_eq!(password.len(), 512, "ASCII password length is NOT 512!!");
+        password = super::generate(
+            192, 
+            super::utilities::PasswordSample::Hex
+        );
+        assert_eq!(password.len(), 192, "HEX password length is NOT 192!!");
+    }
+}
