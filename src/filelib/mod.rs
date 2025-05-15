@@ -339,6 +339,10 @@ mod tests {
     fn get_file_state() {
         let temp_dir = super::PathBuf::new()
             .join("./temp/get_file_state");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete the temp tests dir!!");
+        }
         let de_file_path = temp_dir.join(
             "test.txt"
         );
