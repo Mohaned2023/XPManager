@@ -209,3 +209,31 @@ pub fn delete_one(log_db_path: PathBuf, id: String) -> usize {
         );
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+
+    use std::path::PathBuf;
+    use super::filelib::create_file;
+
+    #[test]
+    fn create_log_table() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/create_log_table");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_log_table(db_path.clone());
+
+        std::fs::remove_dir_all(temp_dir.clone())
+            .expect("Can NOT delete temp dir!!");
+    }
+
+}
