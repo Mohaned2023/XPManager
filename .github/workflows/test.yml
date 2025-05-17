@@ -37,5 +37,17 @@ jobs:
       - name: Build
         run: cargo build --target ${{ matrix.target }}
 
-      - name: Run tests
-        run: cargo test --target ${{ matrix.target }}
+      - name: utilities test
+        run: cargo test utilities --target ${{ matrix.target }}
+
+      - name: filelib test
+        run: cargo test filelib --target ${{ matrix.target }}
+
+      - name: dblib test
+        run: cargo test dblib --target ${{ matrix.target }}
+
+      - name: password manager test
+        run: cargo test password_manager --target ${{ matrix.target }}
+
+      - name: encryption manager test
+        run: cargo test encryption_manager --target ${{ matrix.target }}
