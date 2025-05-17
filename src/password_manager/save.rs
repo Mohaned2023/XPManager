@@ -39,6 +39,10 @@ pub fn main(command: &ArgMatches) {
         name.clone(),
         password
     );
+    dblib::log::register(
+        &format!("'{}' saved successfully.", name), 
+        filelib::log::get_log_db_path()
+    );
     if _is_db_decrypted {
         pm_db_encryption.encrypt();
         logger.info("password manager database encrypted successfully.");

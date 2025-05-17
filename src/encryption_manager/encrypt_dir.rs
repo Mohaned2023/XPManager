@@ -51,6 +51,7 @@ pub fn main(command: &ArgMatches) {
     }
     utilities::confirm();
     logger.start();
+    let log_db_path = filelib::log::get_log_db_path();
     for file in files_paths {
         let file_path_string = file.to_str().unwrap().to_owned();
         if filelib::get_file_state(
@@ -72,7 +73,8 @@ pub fn main(command: &ArgMatches) {
             );
         }
         dblib::log::register(
-            &format!("encrypted '{}'.", file.display())
+            &format!("encrypted '{}'.", file.display()), 
+            log_db_path.clone()
         );
         logger.info(
             &format!("encrypted '{}'.", file.display())
@@ -81,6 +83,7 @@ pub fn main(command: &ArgMatches) {
     logger.info("directory encrypted successfully.");
     displaylib::key::display(key);
     dblib::log::register(
-        &format!("directory '{}' encrypted and wiped", path)
+        &format!("directory '{}' encrypted and wiped", path),
+        log_db_path
     );
 }

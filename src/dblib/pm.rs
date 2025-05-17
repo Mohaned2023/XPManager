@@ -7,8 +7,7 @@ use super::{
     params,
     Connection,
     PathBuf,
-    Tabled,
-    log
+    Tabled
 };
 
 #[derive(Tabled)]
@@ -44,7 +43,6 @@ pub fn create_passwords_table(password_manager_db_path: PathBuf) {
             );
         }
         logger.info("passwords table created successfully.");
-        log::register("create passwords table");
     } else {
         logger.error(
             &format!(
@@ -71,9 +69,7 @@ pub fn save_password(password_manager_db_path: PathBuf, name: String, password: 
                 errorlib::ExitErrorCode::DBInsert
             );
         }
-        let log = format!("'{}' saved successfully.", name);
-        logger.info(&log );
-        log::register(&log);
+        logger.info(&format!("'{}' saved successfully.", name) );
     } else {
         logger.error(
             &format!(
@@ -130,11 +126,6 @@ pub fn update_password(password_manager_db_path: PathBuf, id: String, password: 
                 ",
                 params![password, id]
             ).unwrap_or(0);
-            if rows > 0 {
-                log::register(
-                    &format!("password with id {} updated", id)
-                );
-            }
             return rows;
     } else {
         logger.error(
@@ -158,11 +149,6 @@ pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name:
                 ",
                 params![name, id]
             ).unwrap_or(0);
-            if rows > 0 {
-                log::register(
-                    &format!("password with id {} updated", id)
-                );
-            }
             return rows;
     } else {
         logger.error(
@@ -202,9 +188,6 @@ pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
             ",
             params![id]
         ).unwrap_or(0);
-        log::register(
-            &format!("delete password with id {}: rows affected {}", id, rows)
-        );
         return rows;
     } else {
         logger.error(
@@ -237,8 +220,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path);
 
         std::fs::remove_dir_all(temp_dir)
@@ -258,8 +239,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),
@@ -284,8 +263,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),
@@ -319,8 +296,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),
@@ -362,8 +337,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),
@@ -408,8 +381,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),
@@ -436,8 +407,6 @@ mod tests {
         assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
 
         // This will panic and exit the program if an error occurs.
-        // Warning: This will save to the log manager database the 
-        // creatation of the table.
         super::create_passwords_table(db_path.clone());
         super::save_password(
             db_path.clone(),

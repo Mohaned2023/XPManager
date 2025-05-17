@@ -45,9 +45,8 @@ fn create_log_table(log_db_path: PathBuf) {
     }
 }
 
-pub fn register(log: &str) {
+pub fn register(log: &str, log_db_path: PathBuf) {
     let logger = loglib::Logger::new("register-log");
-    let log_db_path = filelib::log::get_log_db_path();
     let log_db_state = filelib::get_file_state(
         log_db_path.to_str().unwrap().to_string()
     );

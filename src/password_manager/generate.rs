@@ -59,6 +59,7 @@ pub fn main(command: &ArgMatches) {
         if pm_db_state == filelib::FileState::NotFound {
             filelib::create_file(pm_decrypted_path.clone());
             dblib::pm::create_passwords_table(pm_decrypted_path.clone());
+            dblib::log::register("create passwords table", filelib::log::get_log_db_path());
         } else if pm_db_state == filelib::FileState::Encrypted {
             logger.warning("database is encrypted!");
             pm_db_encryption.decrypt();
@@ -70,6 +71,10 @@ pub fn main(command: &ArgMatches) {
             pm_decrypted_path,
             password_name.clone(),
             _password.clone()
+        );
+        dblib::log::register(
+            &format!("'{}' saved successfully.", password_name), 
+            filelib::log::get_log_db_path()
         );
         if _is_db_decrypted {
             pm_db_encryption.encrypt();

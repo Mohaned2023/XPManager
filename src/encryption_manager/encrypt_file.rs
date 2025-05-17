@@ -69,14 +69,16 @@ pub fn main(command: &ArgMatches) {
     }
     logger.info("file encrypted successfully.");
     dblib::log::register(
-        &format!("encrypt file at '{}'", path.clone())
+        &format!("encrypt file at '{}'", path.clone()), 
+        filelib::log::get_log_db_path()
     );
     if *command.get_one::<bool>("delete").unwrap_or(&false) {
         logger.start();
         filelib::wipe_delete(path.clone());
         logger.info("file wiped and deleted successfully.");
         dblib::log::register(
-            &format!("file '{}' wiped", path.clone())
+            &format!("file '{}' wiped", path.clone()), 
+            filelib::log::get_log_db_path()
         );
     }
 }

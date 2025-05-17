@@ -66,6 +66,12 @@ pub fn main(command: &ArgMatches) {
             id.clone(), 
             _password
         );
+        if rows > 0 {
+            dblib::log::register(
+                &format!("the name of the password with id {} updated", id),
+                filelib::log::get_log_db_path()
+            );
+        }
         logger.info(
             &format!("there is {} password updated successfully.", rows)
         );
@@ -76,6 +82,12 @@ pub fn main(command: &ArgMatches) {
             id.clone(), 
             _name
         );
+        if rows > 0 {
+            dblib::log::register(
+                &format!("password with id {} updated", id),
+                filelib::log::get_log_db_path()
+            );
+        }
         logger.info(
             &format!("there is {} password name update successfully.", rows)
         );
