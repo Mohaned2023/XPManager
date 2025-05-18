@@ -42,4 +42,5 @@ pub enum ExitErrorCode {
     Input                  = 95,
     MissingArg             = 96,
     ConfirmationNotMatch   = 97,
+    SampleContainSpace     = 98,
 }
