@@ -10,9 +10,12 @@ pub fn commands() -> Vec<Command> {
                     .alias("g")
                     .about("Generate new password as ASCII/HEX.")
                     .args([
-                        arg!([LENGTH]      "Password length (e.g. 128)."),
-                        arg!(--hex         "Password as hexadecimal."),
-                        arg!(--save <NAME> "Save the password (e.g. \"mohaned2023 github\").")
+                        arg!([LENGTH]             "Password length (e.g. 128)."),
+                        arg!(--hex                "Password as hexadecimal."),
+                        arg!(--"no-symbols"       "Password as letters and numbers (a-z, A-Z, 1-0)."),
+                        arg!(--"add-set" <STRING> "Add custom set to the samples."),
+                        arg!(--custom    <STRING> "Generate from custom samples."),
+                        arg!(--save      <NAME>   "Save the password (e.g. \"mohaned2023 github\").")
                     ]),
                 Command::new("save")
                     .about("Save custom password in the database.")

@@ -38,7 +38,7 @@ fn password_manager(path: String) {
             .unwrap()
             .to_owned()
     );
-    dblib::log::register("created password manager backup.");
+    dblib::log::register("created password manager backup.", filelib::log::get_log_db_path());
     logger.info("created the password manager backup successfully.");
 }
 
@@ -70,7 +70,7 @@ fn logs_manager(path: String) {
             .unwrap()
             .to_owned()
     );
-    dblib::log::register("created logs manager backup.");
+    dblib::log::register("created logs manager backup.", filelib::log::get_log_db_path());
     logger.info("created the logs manager backup successfully.");
 }
 

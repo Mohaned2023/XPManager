@@ -9,22 +9,26 @@ use rand::seq::{IndexedRandom, IteratorRandom};
 #[derive(PartialEq)]
 pub enum PasswordSample {
     Ascii,
+    NoSymbols,
     Hex
 }
 pub fn get_sample(sample: PasswordSample) -> Vec<char> {
-    if sample == PasswordSample::Ascii {
-        ('a'..='z')
-        .chain('A'..='Z')
-        .chain('0'..='9')
-        .chain([
-            '!', '@', '#', '$', '%', '^', '&', '(', ')', '-', '+', '=', '~',
-            '[', ']', '{', '}', '/', '|', ':', ';', '?', ',', '.', '<', '>'
-        ])
-        .collect()
-    } else {
-        ('0'..='9')
-        .chain('A'..='F')
-        .collect()
+    match sample {
+        PasswordSample::Ascii => return ('a'..='z')
+            .chain('A'..='Z')
+            .chain('0'..='9')
+            .chain([
+                '!', '@', '#', '$', '%', '^', '&', '(', ')', '-', '+', '=', '~',
+                '[', ']', '{', '}', '/', '|', ':', ';', '?', ',', '.', '<', '>'
+            ])
+            .collect(),
+        PasswordSample::NoSymbols => return ('a'..='z')
+            .chain('A'..='Z')
+            .chain('0'..='9')
+            .collect(),
+        PasswordSample::Hex => return ('0'..='9')
+            .chain('A'..='F')
+            .collect()
     }
 }
 
@@ -72,4 +76,44 @@ pub fn confirm() {
         )
     }
     logger.info("confirmation completed successfully.");
+}
+
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn get_sample() {
+        let mut sample = super::get_sample(super::PasswordSample::Ascii);
+        let ascii: Vec<char>= ('a'..='z')
+            .chain('A'..='Z')
+            .chain('0'..='9')
+            .chain([
+                '!', '@', '#', '$', '%', '^', '&', '(', ')', '-', '+', '=', '~',
+                '[', ']', '{', '}', '/', '|', ':', ';', '?', ',', '.', '<', '>'
+            ])
+            .collect();
+        let hex: Vec<char> = ('0'..='9')
+            .chain('A'..='F')
+            .collect();
+        let no_sympols: Vec<char> = ('a'..='z')
+            .chain('A'..='Z')
+            .chain('0'..='9')
+            .collect();
+        assert_eq!(sample, ascii, "ASCII samples NOT match!!");
+        sample = super::get_sample(super::PasswordSample::Hex);
+        assert_eq!(sample, hex, "HEX samples NOT match!!");
+        sample = super::get_sample(super::PasswordSample::NoSymbols);
+        assert_eq!(sample, no_sympols, "NoSymbols samples NOT match!!");
+    }
+
+    #[test]
+    fn get_ran_string_number() {
+        let number_str = super::get_ran_string_number();
+        let number = number_str
+            .parse::<u8>()
+            .expect("Can NOT parse the random number to u8!!");
+        assert!(number >= 32 && number <= 72, "Random number NOT in (32 <= x <= 72)!!");
+    }
+
 }

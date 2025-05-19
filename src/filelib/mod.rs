@@ -281,3 +281,194 @@ pub fn read_json(file: String) -> HashMap<String, String> {
         errorlib::ExitErrorCode::CanNotGetJsonObject
     )
 }
+
+
+#[cfg(test)]
+mod tests {
+    use std::io::Write;
+
+    #[test]
+    fn create_file() {
+        let temp_dir = super::PathBuf::new()
+            .join("./temp/create_file");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(&temp_dir)
+                .expect("Can NOT remove test temp dir!!");
+        }
+        let file_path = temp_dir.join("test.txt");
+        super::create_file(file_path.clone());
+        assert_eq!(file_path.exists(), true, "Can NOT create the test file!!");
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT remove test temp dir!!");
+    }
+
+    #[test]
+    fn delete_file() {
+        let file_path = super::PathBuf::new()
+            .join("./temp/delete_file/test.txt");
+        super::create_file(file_path.clone());
+        assert_eq!(file_path.exists(), true, "Can NOT create the test file!!");
+        super::delete_file(file_path.clone());
+        assert_eq!(file_path.exists(), false, "File NOT deleted!!");
+    }
+
+    #[test]
+    fn wipe_delete() {
+        let file_path = super::PathBuf::new()
+            .join("./temp/wipe_delete/test.txt");
+        let message = "this is test message!";
+        super::create_file(file_path.clone());
+        assert_eq!(file_path.exists(), true, "Can NOT create the test file!!");
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .open(&file_path)
+            .expect("Can NOT open the test file!!");
+        file
+            .write_all(message.as_bytes() )
+            .expect("Can NOT write all to the test file!!");
+        super::wipe_delete(
+            file_path
+                .to_str()
+                .expect("Can NOT parse PathBuf to &str")
+                .to_string()
+        );
+        assert_eq!(file_path.exists(), false, "File NOT wiped and deleted!!");
+    }
+
+    #[test]
+    fn get_file_state() {
+        let temp_dir = super::PathBuf::new()
+            .join("./temp/get_file_state");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete the temp tests dir!!");
+        }
+        let de_file_path = temp_dir.join(
+            "test.txt"
+        );
+        let en_file_path = temp_dir.join(
+            "test.txt.x"
+        );
+
+        // File not exists
+        let mut state = super::get_file_state(
+            "./temp/get_file_state/test.txt".to_string()
+        ) == super::FileState::NotFound;
+        assert_eq!(state, true, "File state NOT match!!");
+
+        // File is decrypted
+        super::create_file(de_file_path.clone());
+        assert_eq!(de_file_path.exists(), true, "Can NOT create test file!!");
+        state = super::get_file_state(
+            de_file_path
+                .to_str()
+                .expect("Can NOT parse PathBuf to &str!!")
+                .to_string()
+        ) == super::FileState::Decrypted;
+        assert_eq!(state, true, "File state NOT match!!");
+
+        // File is encrypted
+        super::create_file(en_file_path.clone());
+        assert_eq!(de_file_path.exists(), true, "Can NOT create test file!!");
+        state = super::get_file_state(
+            en_file_path
+                .to_str()
+                .expect("Can NOT parse PathBuf to &str!!")
+                .to_string()
+        ) == super::FileState::Encrypted;
+        assert_eq!(state, true, "File state NOT match!!");
+
+        // Delete temp files
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete the temp tests dir!!");
+    }
+
+    #[test]
+    fn make_encrypt_path() {
+        let file = super::make_encrypt_path(
+            "./temp/make_encrypt_path/test.txt".to_string()
+        );
+        assert_eq!(
+            file, 
+            "./temp/make_encrypt_path/test.txt.x",
+            "Can NOT create encryption path!!"
+        );
+    }
+
+    #[test]
+    fn make_decrypt_path() {
+        let file = super::make_decrypt_path(
+            "./temp/make_decrypt_path/test.txt.x".to_string()
+        );
+        assert_eq!(
+            file, 
+            "./temp/make_decrypt_path/test.txt",
+            "Can NOT create decryption path!!"
+        );
+    }
+
+    #[test]
+    fn dir_files_tree() {
+        let temp_dir = super::PathBuf::new()
+            .join("./temp/dir_files_tree");
+        let mut files_paths: Vec<super::PathBuf> = vec![];
+        let files: [super::PathBuf; 4] = [
+            temp_dir.join("test.txt"),
+            temp_dir.join("dir/test-0.txt"),
+            temp_dir.join("dir/test-1.txt"),
+            temp_dir.join("dir/files/test.txt")
+        ];
+        for file in files.clone() {
+            super::create_file(file.clone());
+            assert_eq!(file.exists(), true, "Can NOT create the test file!!");
+        }
+        super::dir_files_tree(temp_dir.clone(), &mut files_paths);
+        let mut found: bool = false;
+        for file in files {
+            for tree in files_paths.as_slice() {
+                // replace \ or / with -
+                // result will be like: 
+                //      before: './temp/dir_files_tree\\dir/test-0.txt'
+                //      after : '.-temp-dir_files_tree-dir-test-0.txt'
+                if tree
+                    .to_str()
+                    .expect("Can NOT parse PathBuf to &str")
+                    .replace("/", "-")
+                    .replace("\\", "-") == file
+                    .to_str()
+                    .expect("Can NOT parse PathBuf to &str")
+                    .replace("/", "-")
+                    .replace("\\", "-") {
+                    found = true;
+                }
+            }
+            assert_eq!(found, true, "Files tree NOT match!!");
+            found = false;
+        }
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete the temp tests dir!!");
+    }
+
+    #[test]
+    fn copy() {
+        let temp_dir = super::PathBuf::new()
+            .join("./temp/copy");
+        let file = temp_dir.join("src.txt");
+        super::create_file(file.clone());
+        assert_eq!(file.exists(), true, "Can NOT create the test file!!");
+        let to = temp_dir.join("to.txt");
+        super::copy(
+            file
+                .to_str()
+                .expect("Can NOT parse PathBuf to &str!!")
+                .to_string(), 
+            to
+                .to_str()
+                .expect("Can NOT parse PathBuf to &str!!")
+                .to_string()
+        );
+        assert_eq!(to.exists(), true, "Can NOT copy the test file!!");
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete the temp tests dir!!");
+    }
+}

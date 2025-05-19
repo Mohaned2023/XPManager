@@ -31,6 +31,12 @@ pub fn main( command: &ArgMatches ) {
         filelib::pm::get_decrypted_db_path(),
         id.clone()
     );
+    if rows > 0 {
+        dblib::log::register(
+            &format!("password with id {} deleted", id),
+            filelib::log::get_log_db_path()
+        );
+    }
     if _is_db_decrypted {
         pm_db_encryption.encrypt();
         logger.info("password manager database encrypted successfully.");

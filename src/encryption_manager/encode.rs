@@ -80,3 +80,35 @@ pub fn main(command: &ArgMatches) {
     displaylib::encode::display(&_encoded_date);
     logger.info("string encoded successfully.");
 }
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn xpmv1() {
+        let result = super::xpmv1("XPManager".to_string(), 2025);
+        let expected = "0x2b818%$%0x278d0%$%0x26115%$%0x2ff49%$%0x3661e%$%0x2ff49%$%0x32ebf%$%0x31eed%$%0x385c2";
+        assert_eq!(result, expected, "Encode value NOT match!!");
+    }
+
+    #[test]
+    fn hex() { 
+        let result = super::hex("XPManager".to_string());
+        let expected = "58 50 4D 61 6E 61 67 65 72";
+        assert_eq!(result, expected, "Encode value NOT match!!");
+    }
+
+    #[test]
+    fn hex_hash() {
+        let result = super::hex_hash("XPManager".to_string());
+        let expected = "363";
+        assert_eq!(result, expected, "Encode value NOT match!!");
+    }
+
+    #[test]
+    fn bin() {
+        let result = super::bin("XPManager".to_string());
+        let expected = "1011000 1010000 1001101 1100001 1101110 1100001 1100111 1100101 1110010";
+        assert_eq!(result, expected, "Encode value NOT match!!");
+    }
+}

@@ -109,14 +109,46 @@ pub fn main(command: &ArgMatches) {
     }
     logger.info("file decrypted successfully.");
     dblib::log::register(
-        &format!("file '{}' encrypted", path.clone())
+        &format!("file '{}' encrypted", path.clone()),
+        filelib::log::get_log_db_path()
     );
     if *command.get_one::<bool>("delete").unwrap_or(&false) {
         logger.start();
         filelib::wipe_delete(path.clone());
         logger.info("file wiped and deleted successfully.");
         dblib::log::register(
-            &format!("file '{}' wiped", path)
+            &format!("file '{}' wiped", path),
+            filelib::log::get_log_db_path()
         );
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
+    use super::filelib::{create_file, delete_file};
+
+    #[test]
+    fn decrypt() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/decrypt");
+        let file = temp_dir.join("test.txt.x");
+        let de_file = temp_dir.join("test.txt");
+        create_file(file.clone());
+        assert_eq!(file.exists(), true, "Can NOT create the test file!!");
+        let file_path_str = file
+            .to_str()
+            .expect("Can NOT parse PathBuf to &str!!")
+            .to_string();
+
+        delete_file(de_file.clone());
+        assert_eq!(de_file.exists(), false, "Can NOT delete the test file!!");
+        let key = super::Fernet::generate_key();
+        super::decrypt(file_path_str.clone(), key.clone());
+        assert_eq!(de_file.exists(), true, "Can NOT decrypt the test file!!");
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp files!!");
     }
 }

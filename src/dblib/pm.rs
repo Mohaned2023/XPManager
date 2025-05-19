@@ -7,8 +7,7 @@ use super::{
     params,
     Connection,
     PathBuf,
-    Tabled,
-    log
+    Tabled
 };
 
 #[derive(Tabled)]
@@ -44,7 +43,6 @@ pub fn create_passwords_table(password_manager_db_path: PathBuf) {
             );
         }
         logger.info("passwords table created successfully.");
-        log::register("create passwords table");
     } else {
         logger.error(
             &format!(
@@ -71,9 +69,7 @@ pub fn save_password(password_manager_db_path: PathBuf, name: String, password: 
                 errorlib::ExitErrorCode::DBInsert
             );
         }
-        let log = format!("'{}' saved successfully.", name);
-        logger.info(&log );
-        log::register(&log);
+        logger.info(&format!("'{}' saved successfully.", name) );
     } else {
         logger.error(
             &format!(
@@ -130,11 +126,6 @@ pub fn update_password(password_manager_db_path: PathBuf, id: String, password: 
                 ",
                 params![password, id]
             ).unwrap_or(0);
-            if rows > 0 {
-                log::register(
-                    &format!("password with id {} updated", id)
-                );
-            }
             return rows;
     } else {
         logger.error(
@@ -158,11 +149,6 @@ pub fn update_password_name(password_manager_db_path: PathBuf, id: String, name:
                 ",
                 params![name, id]
             ).unwrap_or(0);
-            if rows > 0 {
-                log::register(
-                    &format!("password with id {} updated", id)
-                );
-            }
             return rows;
     } else {
         logger.error(
@@ -202,9 +188,6 @@ pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
             ",
             params![id]
         ).unwrap_or(0);
-        log::register(
-            &format!("delete password with id {}: rows affected {}", id, rows)
-        );
         return rows;
     } else {
         logger.error(
@@ -214,5 +197,229 @@ pub fn delete_password(password_manager_db_path: PathBuf, id: String) -> usize {
             ),
             errorlib::ExitErrorCode::DBConnection
         );
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    
+    use std::path::PathBuf;
+    use super::filelib::create_file;
+
+    #[test]
+    fn create_passwords_table() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/create_passwords_table");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path);
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn save_password() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/save_password");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test".to_string(), 
+            "test123".to_string()
+        );
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn find_password() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/find_password");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test".to_string(), 
+            "test123".to_string()
+        );
+        let passwords = super::find_password(
+            db_path.clone(), 
+            "test".to_string()
+        );
+        assert!(
+            passwords[0].name     == "test" &&
+            passwords[0].password == "test123",
+            "Password NOT match!!",
+        );
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn get_passwords() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/get_passwords");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test-1".to_string(), 
+            "test123".to_string()
+        );
+        super::save_password(
+            db_path.clone(),
+            "test-2".to_string(), 
+            "test123".to_string()
+        );
+        let passwords = super::get_passwords(db_path.clone() );
+        assert_eq!(passwords.len(), 2, "Can NOT get all passwords!!");
+        assert!(
+            passwords[0].name     == "test-1" &&
+            passwords[0].password == "test123",
+            "Password NOT match!!",
+        );
+        assert!(
+            passwords[1].name     == "test-2" &&
+            passwords[1].password == "test123",
+            "Password NOT match!!",
+        );
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn update_password_and_name() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/update_password_and_name");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test".to_string(), 
+            "test123".to_string()
+        );
+        let mut passwords = super::get_passwords(db_path.clone() );
+        assert!(
+            passwords[0].name     == "test" &&
+            passwords[0].password == "test123",
+            "Password NOT match!!",
+        );
+        super::update_password(
+            db_path.clone(), 
+            1.to_string(), 
+            "new123".to_string()
+        );
+        passwords = super::get_passwords(db_path.clone() );
+        assert_eq!(passwords[0].password,"new123", "The password NOT updated!!");
+        super::update_password_name(
+            db_path.clone(), 
+            1.to_string(),
+            "new".to_string()
+        );
+        passwords = super::get_passwords(db_path.clone() );
+        assert_eq!( passwords[0].name, "new", "The password name NOT updated!!" );
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn get_passwords_number() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/get_passwords_number");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test".to_string(), 
+            "test123".to_string()
+        );
+        let number = super::get_passwords_number(db_path.clone() );
+        assert_eq!(number, 1, "Get password number NOT match!!");
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
+    }
+
+    #[test]
+    fn delete_password() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/delete_password");
+        if temp_dir.exists() {
+            std::fs::remove_dir_all(temp_dir.clone())
+                .expect("Can NOT delete temp dir!!");
+        }
+        let db_path = temp_dir.join("test.db");
+        create_file(db_path.clone());
+        assert_eq!(db_path.exists(), true, "Can NOT create the test file!!");
+
+        // This will panic and exit the program if an error occurs.
+        super::create_passwords_table(db_path.clone());
+        super::save_password(
+            db_path.clone(),
+            "test".to_string(), 
+            "test123".to_string()
+        );
+        let mut number = super::get_passwords_number(db_path.clone() );
+        assert_eq!(number, 1, "Number of passwords NOT match!!");
+        super::delete_password(db_path.clone(), 1.to_string());
+        number = super::get_passwords_number(db_path.clone() );
+        assert_eq!(number, 0, "Can NOT delete the password!!");
+
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp dir!!");
     }
 }

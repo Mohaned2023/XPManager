@@ -69,14 +69,54 @@ pub fn main(command: &ArgMatches) {
     }
     logger.info("file encrypted successfully.");
     dblib::log::register(
-        &format!("encrypt file at '{}'", path.clone())
+        &format!("encrypt file at '{}'", path.clone()), 
+        filelib::log::get_log_db_path()
     );
     if *command.get_one::<bool>("delete").unwrap_or(&false) {
         logger.start();
         filelib::wipe_delete(path.clone());
         logger.info("file wiped and deleted successfully.");
         dblib::log::register(
-            &format!("file '{}' wiped", path.clone())
+            &format!("file '{}' wiped", path.clone()), 
+            filelib::log::get_log_db_path()
         );
+    }
+}
+
+
+#[cfg(test)]
+mod test {
+    use std::path::PathBuf;
+    use super::filelib::{create_file, delete_file};
+
+    #[test]
+    fn encrypt() {
+        let temp_dir = PathBuf::new()
+            .join("./temp/encrypt");
+        let file = temp_dir.join("test.txt");
+        let en_file = temp_dir.join("test.txt.x");
+        create_file(file.clone());
+        assert_eq!(file.exists(), true, "Can NOT create the test file!!");
+        let file_path_str = file
+            .to_str()
+            .expect("Can NOT parse PathBuf to &str!!")
+            .to_string();
+
+        // without key
+        let key = super::encrypt( file_path_str.clone(), "".to_string() );
+        assert_eq!(key.len(), 44, "Key length error!");
+        assert_eq!(en_file.exists(), true, "Can NOT encrypt the test file!!");
+
+        // with key
+        delete_file(en_file.clone());
+        assert_eq!(en_file.exists(), false, "Can NOT delete the test file!!");
+        let key = super::Fernet::generate_key();
+        let old_key = super::encrypt(file_path_str.clone(), key.clone());
+        assert_eq!(key, old_key, "Kay NOT match!!");
+        assert_eq!(en_file.exists(), true, "Can NOT encrypt the test file!!");
+
+        // delete temp files
+        std::fs::remove_dir_all(temp_dir)
+            .expect("Can NOT delete temp files!!");
     }
 }

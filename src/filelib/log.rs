@@ -18,3 +18,18 @@ pub fn get_log_db_path() -> PathBuf {
         );
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn get_log_db_path() {
+        let path = super::get_log_db_path();
+        assert_eq!(
+            path,
+            super::data_dir()
+                .expect("Can NOT get system data dir!!")
+                .join("XPManager/data/xpm-log.db"),
+            "Path NOT match!!"
+        )
+    }
+}

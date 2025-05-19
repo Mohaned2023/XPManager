@@ -36,9 +36,11 @@ pub enum ExitErrorCode {
     PMDatabaseEmpty        = 90,
     LMDatabaseNotFound     = 91,
     LogNotFound            = 92,
+    LMDatabaseEncrypted    = 93,
 
     // Others
     Input                  = 95,
     MissingArg             = 96,
     ConfirmationNotMatch   = 97,
+    SampleContainSpace     = 98,
 }

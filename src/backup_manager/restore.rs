@@ -23,6 +23,10 @@ fn hash_map_to_pm_db(data: HashMap<String, String>, pm_db_path: PathBuf) {
             name.clone(), 
             password
         );
+        dblib::log::register(
+            &format!("'{}' saved successfully.", name), 
+            filelib::log::get_log_db_path()
+        );
         logger.info(
             &format!("'{}' restored successfully.", name)
         );
@@ -128,6 +132,7 @@ pub fn main(command: &ArgMatches) {
                 pm_db_path.clone()
             );
             dblib::pm::create_passwords_table(pm_db_path.clone());
+            dblib::log::register("create passwords table", filelib::log::get_log_db_path());
         } else if pm_db_state == filelib::FileState::Encrypted {
             logger.warning("database is encrypted!");
             pm_db_encryption.decrypt();
