@@ -22,7 +22,7 @@ $ xpm --version
 ## Cargo:
 - Clone the repo:
 ```sh
-$ git clone https://github.com/Mohaned2023/XPManager.git
+$ git clone https://github.com/xpmanager/XPManager.git
 $ cd XPManager
 ```
 - Run

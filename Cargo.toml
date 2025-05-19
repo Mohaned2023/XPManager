@@ -1,13 +1,14 @@
 [package]
 name = "XPManager"
-version = "2.1.0"
+version = "2.2.0"
 edition = "2021"
-description = "XPManager is a CLI tool specialized in dealing with passwords management and file encryption/decryption."
+description = "A fast and efficient CLI tool for managing passwords and encrypting sensitive data."
 authors = ["Mohaned Sherhan"]
 license = "MIT"
-repository = "https://github.com/Mohaned2023/XPManager"
-documentation = "https://github.com/Mohaned2023/XPManager/blob/master/USAGE.md"
-homepage = "https://github.com/Mohaned2023/XPManager"
+keywords = ["cli", "encryption", "password", "manager"]
+repository = "https://github.com/xpmanager/XPManager"
+documentation = "https://xpmanager.github.io/docs/intro"
+homepage = "https://xpmanager.github.io/"
 
 [[bin]]
 name = "xpm"
@@ -36,7 +37,7 @@ tabled = "0.18.0"
 maintainer = "Mohaned Sherhan"
 copyright = "2025, Mohaned Sherhan"
 license-file = ["LICENSE"]
-extended-description = """XPManager is a CLI tool specialized in dealing with passwords management and file encryption/decryption."""
+extended-description = """A fast and efficient CLI tool for managing passwords and encrypting sensitive data."""
 depends = "$auto"
 assets = [
     ["target/release/xpm", "usr/local/bin/", "755"],
