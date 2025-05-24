@@ -29,7 +29,7 @@ use crate::{
 /// let delete_files = false;
 /// let log_db_path = PathBuf::new().join('/folder/to/log.db');
 /// 
-/// ecrypt(&files, encryption_key, delete_files, log_db_path);
+/// encrypt(&files, encryption_key, delete_files, log_db_path);
 /// ```
 fn encrypt(paths: &Vec<PathBuf>, key: String, is_delete: bool, log_db_path: PathBuf) {
     let mut logger = loglib::Logger::new("encrypt-dir-thread");
