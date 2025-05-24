@@ -5,6 +5,7 @@ use crate::{
 };
 use colored::Colorize;
 use rand::seq::{IndexedRandom, IteratorRandom};
+use std::path::PathBuf;
 
 #[derive(PartialEq)]
 pub enum PasswordSample {
@@ -76,6 +77,51 @@ pub fn confirm() {
         )
     }
     logger.info("confirmation completed successfully.");
+}
+
+/// Distribute paths to `Vec<Vec<PathBuf>>` based on the threads number,
+/// every `Vec<PathBuf>` carries all paths for one thread, the length
+/// of `Vec<Vec<PathBuf>>` is the number of threads.
+/// 
+/// ### Example:
+/// ```
+/// let files_paths = vec!["file-1.txt", "file-2.txt", "file-3.txt", "file-4.txt"];
+/// let let distributed_paths = utilities::distribute_paths(files_paths.clone());
+/// // if the number of theards >= 4
+/// assert_eq!(
+///     distributed_paths, 
+///     vec![
+///         vec!["file-1.txt"],
+///         vec!["file-2.txt"],
+///         vec!["file-3.txt"],
+///         vec!["file-4.txt"],
+///     ]
+/// );
+/// ```
+pub fn distribute_paths(files_paths: Vec<PathBuf>) -> Vec<Vec<PathBuf>> {
+    let mut paths: Vec<Vec<PathBuf>> = Vec::new();
+    let thread_num = num_cpus::get().max(1);
+    if files_paths.len() <= thread_num {
+        for i in files_paths.clone() {
+            paths.push(vec![i]);
+        }
+    } else {
+        let items_num_per_thread = (files_paths.len() as f64/thread_num as f64).ceil() as usize;
+        let mut seek = 0;
+        for i in 1..=thread_num {
+            if items_num_per_thread*i > files_paths.len() {
+                paths.push(
+                    (files_paths[seek..files_paths.len()]).to_vec()
+                );
+                break;
+            }
+            paths.push(
+                (files_paths[seek..items_num_per_thread*i]).to_vec()
+            );
+            seek = items_num_per_thread * i;
+        }
+    }
+    return paths;
 }
 
 
